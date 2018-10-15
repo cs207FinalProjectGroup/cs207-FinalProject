@@ -31,6 +31,8 @@ $$\dfrac{\partial h}{\partial t} = \dfrac{\partial h}{\partial u}\dfrac{\partial
 | $\exp(x)$           |   $\exp(x)$         |
 | ${a^{x}}$           |   ${a^{x}\ln{a}}$         |
 
+- Dual Numbers. For any variable $f(x)$, we can substitute in $x + \epsilon$ for $x$, where $\epsilon$ is defined such that $\epsilon^{2} = 0$, but $\epsilon$ is not a real number. This will eventually result in $f(x + \epsilon) = f(x) + \dfrac{\partial f_{1}}{\partial x}\epsilon. This is extended to the case of multiple variables. 
+
 
 
 # How to Use *autodiff*
@@ -117,18 +119,18 @@ x.get_derivs('x1')
 
 The plans on organizing our software package are: 
 
-* We are planning to use numpy to conduct most of our calculations, vector operations and definition of elementary functions.
+* We are planning to use **numpy** to conduct most of our calculations, vector operations and definition of elementary functions.
 * The test suite will live in the test directory shown above. We are using both `TravisCI` and `Coveralls'
-* We want to release our package in `PyPI`
+* We want to release our package on `PyPI`
 
 
 # Implementation
 
-Our core data structure for implementing the forward mode of automatic differentiation will be based on the *Scalar* and *Vector* classes. The *Scalar* class will hold two attributes: 1) the value of the variable at the current step and 2) a dictionary containing the derivative or partial derivatives (keys will be the names of the variables (i.e *x* and *y*) and the values will be the derivative value with respect to each variable). **This allows us to easily compute derivatives with respect to a variable when we are performing operations with multiple variables since then we can update each partial derivative individually.** A user can access the value of a *Scalar* object using the *get_value()* method and access the derivative (or partial derivatives) for the object through the *get_derivs()* method. The dunder methods __add__, __sub__, __mul__,  __truediv__, __pow__, __iadd__, __isub__, __imul__, __idiv__, __ipow__ (and the right equivalents) will all be overwritten so that they return a new *Scalar* object with an updated value and derivative.
+Our core data structure for implementing the forward mode of automatic differentiation will be based on the *Scalar* and *Vector* classes. ** To initialize a *Scalar* class, the user will pass in a string that represents the variable (i.e. 'x', 'y', 'x1', etc.) and also the value of variable (the seed value).** The *Scalar* class will hold two attributes: 1) the value of the variable `val` at the current step and 2) a dictionary `deriv` containing the derivative or partial derivatives (keys will be the names of the variables (i.e *x* and *y*) and the values will be the derivative value with respect to each variable). **This allows us to easily compute derivatives with respect to a variable when we are performing operations with multiple variables since then we can update each partial derivative individually based on the variable. When a *Scalar* object is initialized, by default `deriv` will just be a dictionary with the only key being the string the user passes in with value 1. Note that we can also view this class as a representation of a dual number, where `val` represents the real part of a dual number and `deriv` represents the dual parts of the dual number, one dual part for each variable. When users initialize a *Scalar* object, we can think of it as initializing a dual number with real part value of `val` and dual part value of 1.** A user can access the value of a *Scalar* object using the *get_value()* method and access the derivative (or partial derivatives) for the object through the *get_derivs()* method. The dunder methods __add__, __sub__, __mul__,  __truediv__, __pow__, __iadd__, __isub__, __imul__, __idiv__, __ipow__ (and the right equivalents) will all be overwritten so that they return a new *Scalar* object with an updated value and derivatives (dual parts). **By overwriting these methods, we are implementing forward accumulation.**
 
 Another class called *Vector* will take in a list or array of *Scalar* objects. A *Vector* only has one attribute: a numpy array of *Scalar* objects, since each *Scalar* object will track its current value and derivative. The dunder methods __add__, __sub__, __mul__,  __truediv__, __pow__, __iadd__, __isub__, __imul__, __idiv__, __ipow__ (and the right equivalents) will all be overwritten so that they return a new array of *Scalar* objects with updates values and derivatives. To access the values in the *Vector* object, the user can use the *get_values()* method, which returns a *numpy.array* of values. To access the derivatives in the *Vector* object, the user can use the *get_derivs()* method, which returns a *numpy* array of dictionaries containing either the derivative or partial derivatives for each *Scalar* object in the array **The user can obtain a copy of the *numpy.array* with *Scalar* objects using the *get_vector()* method, which will return a copy of the *numpy.array* to the user.**
 
 We will implement functions *sin, cos, tan, arcsin, arccos, arctan, exp* (e^x), *power* (a^x), and *abs* (absolute value). The functions will not be implemented in a specific class, similar to the implementation of *numpy* . These functions will be overloaded so that if a *Scalar* object is passed in, then a new *Scalar* object with an updated value and derivative is returned, depending on the function being called. If a *Vector* object is passed in, then a new *Vector* object with updated values and derivatives is returned. If one of the functions is not differentiable at a given value, then we will throw an error for the user and explain that the function is not differentiable at this specific value.
 
-The implementation of our classes and functions will rely on *numpy*.
+The implementation of our classes and functions will rely heavily on *numpy*.
 
