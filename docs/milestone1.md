@@ -15,6 +15,7 @@ Note that we are only looking at scalar variables in this case, but this idea ca
 
 - The graph structure of calculations and forward accumulation
 
+![](img/graph_eg.png)
 
 - Differential calculus
 
