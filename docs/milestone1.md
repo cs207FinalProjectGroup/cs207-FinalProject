@@ -13,11 +13,8 @@ If the function is expressed as a combination of multiple variables that are exp
 $$\frac{\partial h}{\partial t} = \frac{\partial h}{\partial u}\frac{\partial u}{\partial t} + \frac{\partial h}{\partial v}\frac{\partial v}{\partial t}$$
 Note that we are only looking at scalar variables in this case, but this idea can be extended to vector variables as well.
 
-- The gradient
-
-
-
 - The graph structure of calculations and forward accumulation
+
 
 - Differential calculus
 
