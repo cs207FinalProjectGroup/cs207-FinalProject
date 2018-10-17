@@ -14,11 +14,47 @@ $$\frac{\partial h}{\partial t} = \frac{\partial h}{\partial u}\frac{\partial u}
 Note that we are only looking at scalar variables in this case, but this idea can be extended to vector variables as well.
 
 - The graph structure of calculations and forward accumulation
-
+\begin{align}
+ f\left(x,y\right) &= \frac{x}{y} +cos(x)sin(y)\\
+\end{align}
+ 
 ![](img/graph_eg.png)
 
 - Differential calculus
-
+Differential calculus is a subfield of calculus concerned with the study of the rates at which quantities change.
+Given the function: 
+\begin{align}
+ f\left(x\right) &=  {x^{2}}     
+ \end{align}
+ 
+ Increment x by h:
+ \begin{align}
+ f\left(x+h\right) &=  {(x+h)^{2}}     
+ \end{align}
+ 
+ Apply slope formula:
+  \begin{align}
+ \frac{f\left(x+h\right) - f\left(x\right) }{h}
+ \end{align}
+ 
+Simplyfy equation:
+  \begin{align}
+ \frac{x^{2}+2xh+h^{2}-x^{2} }{h}
+ \end{align}
+   \begin{align}
+ \frac{2xh+h^{2}}{h} &=2x+h
+ \end{align}
+ 
+ Set h to 0:
+   \begin{align}
+ 2x +0 &= 2x
+  \end{align}
+  
+The formula defined is:
+\begin{align}
+ \lim_{h\to0} \frac{f\left(x+h\right) - f\left(x\right) }{h}
+ \end{align}
+ 
 - Elementary functions and their derivatives
 
 |       Function $f(x)$                |       Derivative $f^{\prime}(x)$                |
