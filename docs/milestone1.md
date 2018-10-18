@@ -53,6 +53,8 @@ Note that we are only looking at scalar variables in this case, but this idea ca
 
 - The graph structure of calculations and forward accumulation
 
+Forward accumulation is computing the derivative using the chain rule starting from the inner most derivative to the outer most derivative, where we assume the most basic variables have seed values. Using a graph helps visualize forward accumulation. For example,
+
 \begin{align}
  f\left(x,y\right) &= \frac{x}{y} +cos(x)sin(y)\\
 \end{align}
