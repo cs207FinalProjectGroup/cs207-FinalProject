@@ -1,7 +1,6 @@
-
 # Introduction
 
-Since Newton invented calculus, differentiating a function has been essential to the advancement of humanity. Calculating the derivative of a function is crucial to finding the extrema for a function and determining zeros for a function, two operations that are central to optimization. Often, we can find the symbolic/analytical solution to the derivative of a function, however this has become increasingly complex and computationally expensive as our functions/equations have grown in size and complexity. Numerically solving differential equations forms a cornerstone of modern science and engineering and is intimately linked with machine learning; however this method suffers from rounding errors and numerical instability. Many of these issues can be solved using Automatic Differentiation (AD) because AD can calculate the exact derivative up to machine precision. The logic and processes behind AD enables it to be implemented using computer code, making it easily accessible for use by scientists and mathematicians. This python package will implement the forward mode of AD.
+Since Newton invented calculus, differentiating a function has been essential to the advancement of humanity. Calculating the derivative of a function is crucial to finding the extrema for a function and determining zeros for a function, two operations that are central to optimization (1). Often, we can find the symbolic/analytical solution to the derivative of a function, however this has become increasingly complex and computationally expensive as our functions/equations have grown in size and complexity. Numerically solving differential equations forms a cornerstone of modern science and engineering and is intimately linked with machine learning; however this method suffers from rounding errors and numerical instability. Many of these issues can be solved using Automatic Differentiation (AD) because AD can calculate the exact derivative up to machine precision (2). The logic and processes behind AD enables it to be implemented using computer code, making it easily accessible for use by scientists and mathematicians. This python package will implement the forward mode of AD.
 
 # Background
 
@@ -171,3 +170,7 @@ We will implement functions *sin, cos, tan, arcsin, arccos, arctan, exp* (e^x), 
 
 The implementation of our classes and functions will rely heavily on *numpy*.
 
+## Citations
+1. Sondak, David. “Automatic Differentiation: The Basics.” CS207-Lecture9. Cambridge, MA. 2 October 2018.
+
+2. Hoffman, Philipp H.W. “A Hitchhiker’s Guide to Automatic Differentiation.” **Numerical Algorithms**, 72, 24 October 2015, 775-811, **Springer Link**, DOI 10.1007/s11075-015-0067-6. 
