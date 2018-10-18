@@ -6,7 +6,9 @@ Since Newton invented calculus, differentiating a function has been essential to
 # Background
 
 The mathematical background and concepts that may fit in are:
+
 - Differential calculus
+
 Differential calculus is a subfield of calculus concerned with the study of the rates at which quantities change.
 Given the function: 
 \begin{align}
@@ -42,6 +44,7 @@ The formula defined is:
  \end{align}
  
 - The chain rule
+
 For a function $h(u(t))$, the derivative of $h$ with respect to $t$ can be expressed as:
 $$\dfrac{\partial h}{\partial t} = \dfrac{\partial h}{\partial u}\dfrac{\partial u}{\partial t}.$$
 If the function is expressed as a combination of multiple variables that are expressed in terms of t, i.e. $h(u(t), v(t))$, the the derivative of $h$ with respect to $t$ can be expressed as:
@@ -49,6 +52,7 @@ $$\frac{\partial h}{\partial t} = \frac{\partial h}{\partial u}\frac{\partial u}
 Note that we are only looking at scalar variables in this case, but this idea can be extended to vector variables as well.
 
 - The graph structure of calculations and forward accumulation
+
 \begin{align}
  f\left(x,y\right) &= \frac{x}{y} +cos(x)sin(y)\\
 \end{align}
