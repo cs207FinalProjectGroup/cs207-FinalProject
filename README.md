@@ -1,4 +1,4 @@
-cs207FinalProjectGroup
+Sondak's Disciples
 
 CS207 Group #14
 
