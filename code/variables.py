@@ -8,8 +8,8 @@ class Scalar():
         
     def __add__(self, b):
         try:
-            added = Scalar(None, self._val + b._val)
-            added._deriv.pop(None, None)
+            added = Scalar(None, self._val + b._val); #create new Scalar object with None in the dictionary
+            added._deriv.pop(None, None); # remove None from the derivatives dictionary
             for variable in (set(self._deriv.keys()) | set(b._deriv.keys())):
                 if variable not in self._deriv.keys():
                     added._deriv[variable] = b._deriv[variable]
@@ -18,9 +18,9 @@ class Scalar():
                 else:
                     added._deriv[variable] = self._deriv[variable] + b._deriv[variable] 
                     
-        except AttributeError:
-            added = Scalar(None, self._val + b)
-            added._deriv = self._deriv
+        except AttributeError: #catches Exception if "b" is a int or float
+            added = Scalar(None, self._val + b);
+            added._deriv = self._deriv; #set derivative of new objec to old one
         return added
     
     #might need to account for 0 cases?
@@ -45,13 +45,37 @@ class Scalar():
         return multiplied
         
     def __neg__(self):
-        return
+        negated = Scalar(None, -self._val)
+        negated._deriv.pop(None, None)
+        for variable in self._deriv.keys():
+            negated._deriv[variable] = -self._deriv[variable]
+        return negated
     
     def __sub__(self, b):
-        return 
+        return self + -b
     
     def __pow__(self, b):
-        return
+        try:
+            powered = Scalar(None, self._val ** b._val)
+            powered._deriv.pop(None, None)
+            for variable in (set(self._deriv.keys()) | set(b._deriv.keys())):
+                # _derivative of x^y with respect to y (exponential rule)
+                if variable not in self._deriv.keys():
+                    powered._deriv[variable] = (self._val ** b._val) * np.log(self._val) * b._deriv[variable]
+                # _derivative of x^y with respect to x (power rule)
+                elif variable not in b._deriv.keys():
+                    powered._deriv[variable] = b._val * (self._val ** (b._val - 1)) * self._deriv[variable] 
+                # y = x ^ x 
+                # Credits to http://mathcentral.uregina.ca/QQ/database/QQ.09.03/cher1.html for formula
+                else:
+                    powered._deriv[variable] = self._val * self._val * (np.log(self._val) + 1) * self._deriv[variable] 
+            
+        except AttributeError:
+            powered = Scalar(None, self._val ** b)
+            powered._deriv.pop(None, None)
+            for variable in self._deriv.keys():
+                powered._deriv[variable] = b * (self._val ** (b - 1)) * self._deriv[variable]
+        return powered
         
 
     def __rpow__(self, b):
@@ -92,88 +116,3 @@ class Scalar():
 
 
 
-class Vector():
-    
-    def __init__(self, scalars):
-        self._scalars = scalars
-        self._derivs = [scalar.getDeriv() for scalar in scalars]
-        variables = set()
-        for deriv in self._derivs:
-            variables = variables.union(deriv.keys())
-        self._variables = list(variables)
-
-    
-    def __add__(self, b):
-        try:
-            #Add component wise. Ensures two vectors are same size
-            added = Vector([scalar + b._scalars[i] for i, scalar in enumerate(self._scalars)])                     
-        except AttributeError:
-            added = Vector([scalar + b] for scalar in self._scalars)
-        return added
-    
-    def __mul__(self, b):
-        try:
-            #Multiply component wise. Ensures two vectors are same size
-            multiplied = Vector([scalar * b._scalars[i] for i, scalar in enumerate(self._scalars)])                     
-        except AttributeError:
-            multiplied = Vector([scalar * b] for scalar in self._scalars)
-        return multiplied
-    
-    def __neg__(self):
-        return
-    
-    def __sub__(self, b):
-        return
-
-    def __pow__(self, b):
-        return
-                
-    def __rpow__(self, b):
-        return 
-    
-    def __truediv__(self, b):
-        return 
-    
-    def __rtruediv__(self, b):
-        return 
-
-    def __iadd__(self, b):
-        return 
-    
-    def __isub__(self, b):
-        return 
-    
-    def __imul__(self, b):
-        return 
-        
-    def __ipow__(self, b):
-        return 
-        
-    def __itruediv__(self, b):
-        return
-    
-    def getValues(self):
-        return 
-    
-    def getDerivs(self):
-        return 
-    
-    #returns order of variables. 
-    def getOrder(self):
-        return self._variables
-
-    def setOrder(self, new_order):
-        assert (set(new_order) == set(self._variables))
-        self._variables = new_order
-    
-    #Can choose to not get all variables
-    def getGradient(self, variables = None):     
-        return
-    
-    #This is equivalent to user not passing in any arguments to getGradient
-    def getHessian(self):
-        return self.getGradient()
-    
-    __radd__ = __add__
-    __rmul__ = __mul__  
-    
