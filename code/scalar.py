@@ -103,10 +103,10 @@ class Scalar():
         return 
     
     def getValue(self):
-        return self._val
+        return self._val;
     
     def getDeriv(self):
-        return self._deriv
+        return self._deriv;
     
     def getGradient(self, variables = None):
         return 

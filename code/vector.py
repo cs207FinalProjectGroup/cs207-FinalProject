@@ -6,6 +6,8 @@ Created on Sun Oct 28 14:35:05 2018
 @author: bhavenpatel
 """
 
+from variables import Scalar
+
 class Vector():
     
     def __init__(self, scalars):
