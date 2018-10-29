@@ -6,6 +6,9 @@ class Scalar():
         self._val = float(val) #ensures _val is numeric
         self._deriv = {variable: 1.0}
         
+    def __str__(self):
+        return "Value: {0}, Derivatives: {1}".format(self._val, self._deriv);
+    
     def __add__(self, b):
         try:
             added = Scalar(None, self._val + b._val); #create new Scalar object with None in the dictionary
