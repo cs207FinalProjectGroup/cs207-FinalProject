@@ -54,6 +54,9 @@ class Scalar():
     def __sub__(self, b):
         return self + -b
     
+    def __rsub__(self, b):
+        return b + -self
+    
     def __pow__(self, b):
         try:
             powered = Scalar(None, self._val ** b._val)
@@ -78,41 +81,100 @@ class Scalar():
         return powered
         
 
+ 
     def __rpow__(self, b):
-        return
+        powered = Scalar(None, self._val ** b)
+        powered._deriv.pop(None, None)
+        for variable in self._deriv.keys():
+            powered._deriv[variable] = (b ** self._val) * np.log(b) * self._deriv[variable]
+        return powered
     
     def __truediv__(self, b):
-        return
-
+        return self * (b ** -1)
+    
     def __rtruediv__(self, b):
-        return 
+        return b * (self ** -1)
     
     def __iadd__(self, b):
-        return 
+        try:
+            self._val += b._val
+            for variable in (set(self._deriv.keys()) | set(b._deriv.keys())):
+                if variable not in self._deriv.keys():
+                    self._deriv[variable] = b._deriv[variable]
+                #_derivative is from self, so do not need to do anything
+                elif variable not in b._deriv.keys():
+                    continue
+                else:
+                    self._deriv[variable] += b._deriv[variable] 
+                    
+        except AttributeError:
+            self._val += b
+        return self
 
     def __isub__(self, b):
-        return 
+        self += -b
+        return self
     
     def __imul__(self, b):
-        return 
+        try:
+            #need original self._val for _derivative computations
+            original_self_val = self._val
+            self._val *= b._val 
+            for variable in (set(self._deriv.keys()) | set(b._deriv.keys())):
+                if variable not in self._deriv.keys():
+                    self._deriv[variable] = original_self_val * b._deriv[variable]
+                elif variable not in b._deriv.keys():
+                    self._deriv[variable] = b._val * self._deriv[variable] 
+                else:
+                    self._deriv[variable] = original_self_val * b._deriv[variable] + b._val * self._deriv[variable] 
+
+        except AttributeError:
+            #technically can multiply string by number. Prevent this edge case from happening.
+            self._val *= float(b)
+            for variable in self._deriv.keys():
+                self._deriv[variable] = b * self._deriv[variable]
+        return self
     
     def __ipow__(self, b):
-        return 
+        original_self_val = self._val
+        try:
+            self._val **= b._val
+            for variable in (set(self._deriv.keys()) | set(b._deriv.keys())):
+                # _derivative of x^y with respect to y (exponential rule)
+                if variable not in self._deriv.keys():
+                    self._deriv[variable] = (original_self_val ** b._val) * np.log(self._val) * b._deriv[variable]
+                # _derivative of x^y with respect to x (power rule)
+                elif variable not in b._deriv.keys():
+                    self._deriv[variable] = b._val * (original_self_val ** (b._val - 1)) * self._deriv[variable] 
+                # y = x ^ x 
+                # Credits to http://mathcentral.uregina.ca/QQ/database/QQ.09.03/cher1.html for formula
+                else:
+                    self._deriv[variable] = original_self_val * self._val * (np.log(self._val) + 1) * self._deriv[variable] 
+        
+        except AttributeError:
+            self._val **= b
+            for variable in self._deriv.keys():
+                self._deriv[variable] = b * (original_self_val ** (b - 1)) * self._deriv[variable]
+        return self
     
     def __itruediv__(self, b):
-        return 
+        self *= (b ** -1)
+        return self
     
     def getValue(self):
-        return self._val;
+        return self._val
     
     def getDeriv(self):
-        return self._deriv;
+        return self._deriv
     
     def getGradient(self, variables = None):
-        return 
+        if variables is None:
+            variables = self._deriv.keys()
+        derivs = []
+        for variable in variables:
+            derivs.append(self._deriv[variable])
+        derivs = np.array(derivs)
+        return derivs
         
     __radd__ = __add__
     __rmul__ = __mul__
-
-
-
