@@ -7,10 +7,22 @@ class Scalar():
     """
 
     def __init__(self, variable, val):  
+        """The Scalar object contains two attributes, _val and _deriv, where the former is the value of the Scalar and the latter the derivatives.
+        When a new Scalar is initialized. A user sets the name and value of the scalar during initialization. 
+    
+        INPUTS
+        =======   
+        variable: String
+        The name of the Scalar object. Used as a key in ._deriv
+
+        val: int or float 
+        The value of the Scalar
+        """
         self._val = float(val) #ensures _val is numeric
         self._deriv = {variable: 1.0}
         
     def __str__(self):
+        """String representation of the Scalar object. Tells both the value and the derivatives."""
         return "Value: {0}, Derivatives: {1}".format(self._val, self._deriv);
     
     def __add__(self, b):
