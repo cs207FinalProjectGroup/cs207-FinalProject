@@ -118,19 +118,19 @@ def test_rpow():
 
 
 def test_truediv():
-    x,y=Scalar('x', 3),Scalar('y', 2)
+    x,y=ad.Scalar('x', 3),ad.Scalar('y', 2)
     val = x/y
     assert(val.getValue() == 1.5)
     assert(val.getDeriv()['x']== 0.5)
     assert(val.getDeriv()['y']== -0.75)
 
-    x,y=Scalar('x', 0),Scalar('y', 8)
+    x,y=ad.Scalar('x', 0),ad.Scalar('y', 8)
     val = x/y
     assert(val.getValue() == 0.0)
     assert(val.getDeriv()['x'] == 0.125)
     assert(val.getDeriv()['y'] == -0.0)
 
-    x=Scalar('x', 0)
+    x=ad.Scalar('x', 0)
     val = x/8
     assert(val.getValue() == 0.0)
     assert(val.getDeriv()['x'] == 0.125)
@@ -148,18 +148,18 @@ def test_truediv():
         
 def test_rtruediv():
     
-    x,y=Scalar('x', 3),Scalar('y', 2)
+    x,y=ad.Scalar('x', 3),ad.Scalar('y', 2)
     val = x/y
     assert(val.getValue() ==1.5)
     assert(val.getDeriv()['x'] ==0.5)
     assert(val.getDeriv()['y'] ==-0.75)
 
-    y=Scalar('y', 1)
+    y=ad.Scalar('y', 1)
     val = 10/y
     assert(val.getValue() ==10.0)
     assert(val.getDeriv()['y'] ==-10.0)
 
-    y=Scalar('y', 2)
+    y=ad.Scalar('y', 2)
     val = 8/y
     assert(val.getValue()=4.0 )
     assert(val.getDeriv()['y']=-2.0)
