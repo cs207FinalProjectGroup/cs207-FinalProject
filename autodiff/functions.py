@@ -6,7 +6,7 @@ Created on Sun Oct 28 21:04:11 2018
 @author: bhavenpatel
 """
 import numpy as np
-from scalar import Scalar
+from autodiff.scalar import Scalar
 
 def sin(sclr: Scalar):
     '''
