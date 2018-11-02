@@ -9,37 +9,29 @@ import autodiff as ad
 
 def test_add():
     
-    x = ad.Scalar('x', 2)
-    y = ad.Scalar('y', 5)
+    x,y = ad.Scalar('x', 2),ad.Scalar('y', 5)
     val = x+y
     assert(val.getValue() == 7.0)
     assert(val.getDeriv()['x'] == 1.0)
     assert(val.getDeriv()['y'] == 1.0)
     
-    x = ad.Scalar('x', 0)
-    y = ad.Scalar('y', 0)
+    x,y = ad.Scalar('x', 0),ad.Scalar('y', 0)
     val = x+y
     assert(val.getValue() == 0.0)
     assert(val.getDeriv()['x'] == 1.0)
     assert(val.getDeriv()['y'] == 1.0)
     
-    x = ad.Scalar('x', 2)
-    y = ad.Scalar('y', 5)
+    x,y = ad.Scalar('x', 2),ad.Scalar('y', 5)
     y._deriv['y']=-3
     val = x+y
     assert (val.getValue()==7.0)
     assert (val.getDeriv()['x']==1.0)
     assert (val.getDeriv()['y']==-3.0)
     
-    x = ad.Scalar('x', 8)
-    val = x+8
-    assert (val.getValue()==16)
-    assert (val.getDeriv()['x']==1)
     
 def test_mul():
     
     x,y = ad.Scalar('x', 5), ad.Scalar('y', 6)
-
     val = x*y
     assert (val.getValue()==30.0)
     assert(val.getDeriv()['x']==6.0)
@@ -57,10 +49,6 @@ def test_mul():
     assert(val.getDeriv()['x']==0)
     assert(val.getDeriv()['y']==1.0)
     
-    x = ad.Scalar('x', 2)
-    val = x * 2
-    assert(val.getValue()==4)
-    assert(val.getDeriv()['x']==2)
     
 def test_neg():
     x,y = ad.Scalar('x', 5), ad.Scalar('y', 1)
@@ -89,7 +77,6 @@ def test_sub():
     
     with pytest.raises(TypeError):
         x - "3"
-        
         
 def test_pow():
     
@@ -128,6 +115,7 @@ def test_rpow():
     val = 1.0**x
     assert(val.getValue()==1)
     assert(np.isclose(val._deriv['x'], 0.0)==True)
+
 
 
 
