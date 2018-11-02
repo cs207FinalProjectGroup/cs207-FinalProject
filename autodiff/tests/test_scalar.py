@@ -75,7 +75,7 @@ def test_ipow():
     x **= y
     assert(x.getValue() == 32)
     assert(x.getDeriv()['x'] == 80)
-    # assert(abs(x.getDeriv()['y'] - np.log(2) * 32) < 1e-6)
+    assert(abs(x.getDeriv()['y'] - np.log(2) * 32) < 1e-6)
 
     x = ad.Scalar('x', 2)
     x **= 3
@@ -87,16 +87,31 @@ def test_ipow():
     assert(x.getValue() == 1)
     assert(x.getDeriv()['x'] == 0)
 
+    x = ad.Scalar('x', -3)
     with pytest.raises(ValueError):
-        x = ad.Scalar('x', -3)
         x **= 2.5
 
+    x = ad.Scalar('x', -3)
     with pytest.raises(ValueError):
-        x = ad.Scalar('x', -3)
         x **= ad.Scalar('y', 1.4)
 
-    """
-    Add 0**0... 0**-3, 0**
-    """
+    x = ad.Scalar('x', 0)
+    with pytest.raises(ZeroDivisionError):
+        x **= -0.1
+
+    x = ad.Scalar('x', 0)
+    with pytest.raises(ZeroDivisionError):
+        x **= -5
+
+    x = ad.Scalar('x', 0)
+    x **= 1.2
+    assert(x.getValue() == 0)
+    assert(x.getDeriv() == 0)
+
+    x = ad.Scalar('x', 0)
+    with pytest.raises(ZeroDivisionError):
+        x **= 0.5
+
+
 
 
