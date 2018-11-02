@@ -1,10 +1,6 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
-"""
-Created on Sun Oct 28 21:04:11 2018
 
-@author: bhavenpatel
-"""
 import numpy as np
 from autodiff.scalar import Scalar
 
@@ -12,15 +8,33 @@ def sin(sclr: Scalar):
     '''
     This function takes in a Scalar object, applies the sine function to its value, and returns a new Scalar object with the updated value and derivative.
     
-    Parameters:
-    scalar -- A Scalar object on which the sine function will applied.
+    INPUTS
+    ======= 
+    scalar: A Scalar object on which the sine function will applied.
     
-    Returns:
-    A Scalar object.
+    RETURNS
+    ========
+    Scalar
+    The new Scalar resulting from applying the sine function to  'sclr'.
+    
+    NOTES
+    =====
+    POST:
+        - 'sclr' is not changed by the function
+        - returns a Scalar object, resulting from applying the sine function to  'sclr'.
+
+    EXAMPLES
+    =========
+    >>> x = Scalar('x', 2)
+    >>> z = sin(x)
+    >>> z._val
+    0.9092974268256817
+    >>> z._deriv
+    {'x': -0.4161468365471424}
     '''
     
     result = Scalar(None, np.sin(sclr._val) ); #create new Scalar object with updated value
-    result._deriv = sclr._deriv;
+    result._deriv = sclr._deriv.copy(); #result's derivative map is a copy of the passed in Scalar
     #update derivatives for all of the variables in result by applying cos(deriv)
     for key in result._deriv.keys():
         d = result._deriv[key];
@@ -29,18 +43,35 @@ def sin(sclr: Scalar):
 
 def cos(sclr: Scalar):
     '''
-    This function takes in a Scalar object, applies the cosine function to its value, and returns a new
-    Scalar object with the updated value and derivative.
+    This function takes in a Scalar object, applies the cosine function to its value, and returns a new Scalar object with the updated value and derivative.
     
-    Parameters:
-    scalar -- A Scalar object on which the cosine function will applied.
+    INPUTS
+    ======= 
+    scalar: A Scalar object on which the cosine function will applied.
     
-    Returns:
-    A Scalar object.
+    RETURNS
+    ========
+    Scalar
+    The new Scalar resulting from applying the cosine function to  'sclr'.
+    
+    NOTES
+    =====
+    POST:
+        - 'sclr' is not changed by the function
+        - returns a Scalar object, resulting from applying the cosine function to  'sclr'.
+
+    EXAMPLES
+    =========
+    >>> x = Scalar('x', 2)
+    >>> z = cos(x)
+    >>> z._val
+    -0.4161468365471424
+    >>> z._deriv
+    {'x': -0.9092974268256817}
     '''
     
     result = Scalar(None, np.sin(sclr._val) ); #create new Scalar object with updated value
-    result._deriv = sclr._deriv;
+    result._deriv = sclr._deriv.copy(); #result's derivative map is a copy of the passed in Scalar
     #update derivatives for all of the variables in result by applying -sin(deriv)
     for key in result._deriv.keys():
         d = result._deriv[key];
@@ -51,17 +82,35 @@ def tan(sclr: Scalar):
     '''
     This function takes in a Scalar object, applies the tangent function to its value, and returns a new Scalar object with the updated value and derivative.
     
-    Parameters:
-    scalar -- A Scalar object on which the cosine function will applied.
+    INPUTS
+    ======= 
+    scalar: A Scalar object on which the tanget function will applied.
     
-    Returns:
-    A Scalar object.
+    RETURNS
+    ========
+    Scalar
+    The new Scalar resulting from applying the tangent function to  'sclr'.
+    
+    NOTES
+    =====
+    POST:
+        - 'sclr' is not changed by the function
+        - returns a Scalar object, resulting from applying the tangent function to  'sclr'.
+
+    EXAMPLES
+    =========
+    >>> x = Scalar('x', 2)
+    >>> z = tan(x)
+    >>> z._val
+    -2.185039863261519
+    >>> z._deriv
+    {'x': 5.774399204041917}
     '''
     #return sin(Scalar) / cos(Scalar) since these functions are already implemented
     return sin(sclr) / cos(sclr);
 
 def power(x, y):
-    """Returns a Scalar object representing the operation x ** y, where 'x' and 'y' can be any combination of ints, floats, or Scalar objects. Calculation of new Scalar's value and derivations follow rules for exponents and power rule of differentiation respectively. 
+    """Returns a Scalar object representing the operation x ** y, where 'x' and 'y' can be any combination of ints, floats, or Scalar objects. Calculation of new Scalar's derivatives follow rules for exponents and power rule of differentiation respectively. 
     
     INPUTS
     =======   
@@ -77,12 +126,9 @@ def power(x, y):
 
     NOTES
     =====
-    PRE: 
-        - x is an int or float or Scalar
-        - y is an int or
     POST:
         - 'x' and 'y' are not changed by the function
-        - returns a scalar object, resulting from raising 'x' to the power of 'y'
+        - returns a Scalar object, resulting from raising 'x' to the power of 'y'
 
     EXAMPLES
     =========
@@ -96,5 +142,43 @@ def power(x, y):
 
     """
     return x**y;
+
     
+def exp(sclr: Scalar):
+    """Returns a Scalar object representing the operation e^(sclar), where 'sclr' is the current Scalar object. Calculations of new Scalar's derivatives follow the power rule of differentiation.
+
+    INPUTS
+    =======   
+    sclr: Scalar object
+    The Scalar we raise 'e' to the power of.
+
+    RETURNS
+    ========
+    Scalar
+    The new Scalar resulting from raising 'e' to the power of 'sclr'.
+
+    NOTES
+    =====
+    POST:
+        - 'sclr' is not changed by the function
+        - returns a Scalar object, resulting from raising 'e' to the power of 'sclr'
+
+    EXAMPLES
+    =========
+    >>> x = Scalar('x', 2)
+    >>> y = exp(x)
+    >>> y._val
+    7.38905609893065
+    >>> y._deriv
+    {'x': 7.38905609893065}
+
+    """
+    result = Scalar( np.exp(sclr._val) ); #create new Scalar object with value = e^val
+    result._deriv = sclr._deriv.copy(); #result's derivative map is a copy of the passed in Scalar
+    #update derivatives for all of the variables in result by applying e^(deriv)
+    for key in result._deriv.keys():
+        d = result._deriv[key];
+        result._deriv[key] = np.exp(d);
+    return result;
+        
     
