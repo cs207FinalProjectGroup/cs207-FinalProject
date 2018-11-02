@@ -56,8 +56,10 @@ class Scalar():
 		>>> z = x + y
 		>>> z._val
 		3.0
-		>>> z._deriv
-		{'x': 1.0, 'y': 1.0}
+		>>> z._deriv['x']
+		1.0
+		>>> z._deriv['y']
+		1.0
 		>>> z = x + 1
 		>>> z._val
 		3.0
@@ -113,8 +115,10 @@ class Scalar():
 		>>> z = x * y
 		>>> z._val
 		2.0
-		>>> z._deriv
-		{'x': 1.0, 'y': 2.0}
+		>>> z._deriv['x']
+		1.0
+		>>> z._deriv['y']
+		2.0
 		>>> z = x * 2
 		>>> z._val
 		4.0
@@ -192,7 +196,7 @@ class Scalar():
 		>>> y._val
 		4.0
 		>>> y._deriv
-		{'x': 2.0}
+		{'x': 4.0}
 
 		"""
 		try:
@@ -246,9 +250,8 @@ class Scalar():
 		>>> y = 2 ** x
 		>>> y._val
 		4.0
-		>>> y._deriv
-		{'x': 4 * np.log(2)}
-
+		>>> np.isclose(y._deriv['x'], 4 * np.log(2))
+		True
 		"""
 		powered = Scalar(None, self._val ** b)
 		powered._deriv.pop(None, None)
@@ -368,3 +371,4 @@ class Scalar():
 		
 	__radd__ = __add__
 	__rmul__ = __mul__
+
