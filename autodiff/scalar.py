@@ -339,8 +339,11 @@ class Scalar():
     
     def __itruediv__(self, b):
         """In place division. Changes the values and derivatives of self directly."""
-        self *= (b ** -1)
-        return self
+        
+        result = self / b; #use truediv to calculate the value and derivative
+        self._val = result._val; #reassign the value of self
+        self._deriv = result._deriv; #reassign the value of deriv
+        return self;
     
     def getValue(self):
         """Returns the value of the scalar so that users does not access the value directly and potentially change it."""
