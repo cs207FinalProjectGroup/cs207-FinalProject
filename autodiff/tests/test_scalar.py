@@ -6,17 +6,6 @@ import pytest
 sys.path.append(os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__)))))
 import autodiff as ad
 
-"""
-iadd
-isub
-imul
-ipow
-itruediv
-radd
-rmul
-rsub
-"""
-
 
 def test_iadd():
     x = ad.Scalar('x', 2)
@@ -68,6 +57,87 @@ def test_imul():
     assert(x.getDeriv()['y'] == -6)
 
 
+def test_rsub():
+    x = 2
+    y = ad.Scalar('y', 5)
+
+    z = x - y
+    assert(z.getValue() == -3)
+    assert(z.getDeriv()['y'] == -1)
+
+    y = ad.Scalar('y', 1)
+    y._deriv['y'] = -3
+    z = -5.2 - y
+    assert(z.getValue() == -6.2)
+    assert(z.getDeriv()['y'] == 3)
+
+    with pytest.raises(TypeError):
+        "3" - y
+
+
+def test_radd():
+    x = 2
+    y = ad.Scalar('y', 5)
+
+    z = x + y
+    assert(z.getValue() == 7)
+    assert(z.getDeriv()['y'] == 1)
+
+    y = ad.Scalar('y', 1)
+    y._deriv['y'] = -3
+    z = -5.2 + y
+    assert(z.getValue() == -4.2)
+    assert(z.getDeriv()['y'] == -3)
+
+    with pytest.raises(TypeError):
+        "3" + y
+
+
+def test_rmul():
+    x = 2
+    y = ad.Scalar('y', 5)
+
+    z = x * y
+    assert(z.getValue() == 10)
+    assert(z.getDeriv()['y'] == 2)
+
+    z = -3 * z
+    assert(z.getDeriv()['y'] == -6)
+
+    with pytest.raises(TypeError):
+        "8" * z
+
+
+def test_itruediv():
+    x = ad.Scalar('x', 3)
+    y = ad.Scalar('y', 2)
+    x /= y
+    assert(x.getValue() == 1.5)
+    assert(x.getDeriv()['x'] == 0.5)
+    assert(x.getDeriv()['y'] == -0.75)
+
+    x = ad.Scalar('x', 2)
+    y = ad.Scalar('y', 5)
+    x._deriv['x'] = -3
+    x /= y
+    assert(abs(x.getDeriv()['x'] - (-0.6)) < 1e-6)
+
+    with pytest.raises(TypeError):
+        x /= "5"
+
+    with pytest.raises(ZeroDivisionError):
+        x /= 0
+
+    with pytest.raises(ZeroDivisionError):
+        x /= ad.Scalar('z', 0)
+
+    x = ad.Scalar('x', 3)
+    y = ad.Scalar('y', 2)
+    y._deriv['y'] = -2
+    x /= y
+    assert(x.getValue() == 1.5)
+    assert(x.getDeriv()['y'] == 3/8)
+
 def test_ipow():
     x = ad.Scalar('x', 2)
     y = ad.Scalar('y', 5)
@@ -111,6 +181,7 @@ def test_ipow():
     x = ad.Scalar('x', 0)
     with pytest.raises(ZeroDivisionError):
         x **= 0.5
+
 
 
 
