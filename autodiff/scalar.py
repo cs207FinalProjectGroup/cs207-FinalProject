@@ -316,26 +316,31 @@ class Scalar():
     
     def __ipow__(self, b):
         """In place exponent. Changes the values and derivatives of self directly."""
-        original_self_val = self._val
-        try:
-            self._val **= b._val
-            for variable in (set(self._deriv.keys()) | set(b._deriv.keys())):
-                # _derivative of x^y with respect to y (exponential rule)
-                if variable not in self._deriv.keys():
-                    self._deriv[variable] = (original_self_val ** b._val) * np.log(original_self_val) * b._deriv[variable]
-                # _derivative of x^y with respect to x (power rule)
-                elif variable not in b._deriv.keys():
-                    self._deriv[variable] = b._val * (original_self_val ** (b._val - 1)) * self._deriv[variable] 
-                # y = x ^ x 
-                # Credits to http://mathcentral.uregina.ca/QQ/database/QQ.09.03/cher1.html for formula
-                else:
-                    self._deriv[variable] = original_self_val * original_self_val * (np.log(original_self_val) + 1) * self._deriv[variable] 
-
-        except AttributeError:
-            self._val **= b
-            for variable in self._deriv.keys():
-                self._deriv[variable] = b * (original_self_val ** (b - 1)) * self._deriv[variable]
-        return self
+#        original_self_val = self._val
+#        try:
+#            self._val **= b._val
+#            for variable in (set(self._deriv.keys()) | set(b._deriv.keys())):
+#                # _derivative of x^y with respect to y (exponential rule)
+#                if variable not in self._deriv.keys():
+#                    self._deriv[variable] = (original_self_val ** b._val) * np.log(original_self_val) * b._deriv[variable]
+#                # _derivative of x^y with respect to x (power rule)
+#                elif variable not in b._deriv.keys():
+#                    self._deriv[variable] = b._val * (original_self_val ** (b._val - 1)) * self._deriv[variable] 
+#                # y = x ^ x 
+#                # Credits to http://mathcentral.uregina.ca/QQ/database/QQ.09.03/cher1.html for formula
+#                else:
+#                    self._deriv[variable] = original_self_val * original_self_val * (np.log(original_self_val) + 1) * self._deriv[variable] 
+#
+#        except AttributeError:
+#            self._val **= b
+#            for variable in self._deriv.keys():
+#                self._deriv[variable] = b * (original_self_val ** (b - 1)) * self._deriv[variable]
+        
+        #just use __pow__ to compute- Bhaven
+        result = self ** b;
+        self._val = result._val;
+        self._deriv = result._deriv;
+        return self;
     
     def __itruediv__(self, b):
         """In place division. Changes the values and derivatives of self directly."""
