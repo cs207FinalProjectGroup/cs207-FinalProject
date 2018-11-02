@@ -38,7 +38,7 @@ def sin(sclr: Scalar):
     #update derivatives for all of the variables in result by applying cos(deriv)
     for key in result._deriv.keys():
         d = result._deriv[key];
-        result._deriv[key] = np.cos(d);
+        result._deriv[key] = np.cos(sclr._val) * d;
     return result;
 
 def cos(sclr: Scalar):
@@ -70,12 +70,12 @@ def cos(sclr: Scalar):
     {'x': -0.9092974268256817}
     '''
     
-    result = Scalar(None, np.sin(sclr._val) ); #create new Scalar object with updated value
+    result = Scalar(None, np.cos(sclr._val) ); #create new Scalar object with updated value
     result._deriv = sclr._deriv.copy(); #result's derivative map is a copy of the passed in Scalar
     #update derivatives for all of the variables in result by applying -sin(deriv)
     for key in result._deriv.keys():
         d = result._deriv[key];
-        result._deriv[key] = -1 * np.sin(d);
+        result._deriv[key] = -1 * np.sin(sclr._val) * d;
     return result;
 
 def tan(sclr: Scalar):
@@ -138,7 +138,7 @@ def power(x, y):
     >>> z._val
     8.0
     >>> z._deriv
-    {'x': 12.0, 'y': 5.545177444479561}
+    {'x': 12.0, 'y': 5.545177444479562}
 
     """
     return x**y;
@@ -173,12 +173,12 @@ def exp(sclr: Scalar):
     {'x': 7.38905609893065}
 
     """
-    result = Scalar( np.exp(sclr._val) ); #create new Scalar object with value = e^val
+    result = Scalar(None, np.exp(sclr._val) ); #create new Scalar object with value = e^val
     result._deriv = sclr._deriv.copy(); #result's derivative map is a copy of the passed in Scalar
     #update derivatives for all of the variables in result by applying e^(deriv)
     for key in result._deriv.keys():
         d = result._deriv[key];
-        result._deriv[key] = np.exp(d);
+        result._deriv[key] = result._val * d;
     return result;
         
     
