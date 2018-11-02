@@ -161,8 +161,8 @@ def test_rtruediv():
 
     y=ad.Scalar('y', 2)
     val = 8/y
-    assert(val.getValue()=4.0 )
-    assert(val.getDeriv()['y']=-2.0)
+    assert(val.getValue()==4.0 )
+    assert(val.getDeriv()['y']==-2.0)
 
         
     y = ad.Scalar('x', 0.0)
