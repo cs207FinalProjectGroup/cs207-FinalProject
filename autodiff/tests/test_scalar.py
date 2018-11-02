@@ -75,10 +75,59 @@ def test_neg():
     assert(val.getDeriv()['x']==1.0)
     assert(val.getDeriv()['y']==-1.0)
 
+def test_sub():
+    
     x= ad.Scalar('x', 1)
     val = x-5
     assert (val.getValue()==-4.0)
     assert(val.getDeriv()['x']==1.0)
+    
+    x= ad.Scalar('x', 0)
+    val = x-3.3
+    assert (val.getValue()==-3.3)
+    assert(val.getDeriv()['x']==1.0)
+    
+    with pytest.raises(TypeError):
+        x - "3"
+        
+        
+def test_pow():
+    
+    x=ad.Scalar('x', 2)
+    val = x**2
+    assert(val.getValue()==4.0)
+    assert(val.getDeriv()['x']==4.0)
+
+    x=ad.Scalar('x', 1)
+    val = x**2
+    assert(val.getValue()==1.0)
+    assert(val.getDeriv()['x']==2.0)
+
+    x=ad.Scalar('x', 0)
+    val = x**2
+    assert(val.getValue()==0.0)
+    assert(val.getDeriv()['x']==0.0)
+    
+
+def test_rpow():
+    
+    x=ad.Scalar('x', 2)
+    val = 2.0**x
+    assert(val.getValue())
+    assert(val.getDeriv()['x'])
+    assert(np.isclose(val._deriv['x'], 4.0 * np.log(2.0))==True)
+
+
+    x=ad.Scalar('x', 2)
+    val = 3.0**x
+    assert(val.getValue()==9)
+    assert(np.isclose(val._deriv['x'], 9.0 * np.log(3.0))==True)
+
+
+    x=ad.Scalar('x', 2)
+    val = 1.0**x
+    assert(val.getValue()==1)
+    assert(np.isclose(val._deriv['x'], 0.0)==True)
 
 
 
