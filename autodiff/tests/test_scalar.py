@@ -76,7 +76,7 @@ def test_sub():
     assert(val.getDeriv()['x']==1.0)
     
     with pytest.raises(TypeError):
-        x - "3"
+        x - "5"
         
 def test_pow():
     
@@ -117,6 +117,60 @@ def test_rpow():
     assert(np.isclose(val._deriv['x'], 0.0)==True)
 
 
+def test_truediv():
+    x,y=Scalar('x', 3),Scalar('y', 2)
+    val = x/y
+    assert(val.getValue() == 1.5)
+    assert(val.getDeriv()['x']== 0.5)
+    assert(val.getDeriv()['y']== -0.75)
+
+    x,y=Scalar('x', 0),Scalar('y', 8)
+    val = x/y
+    assert(val.getValue() == 0.0)
+    assert(val.getDeriv()['x'] == 0.125)
+    assert(val.getDeriv()['y'] == -0.0)
+
+    x=Scalar('x', 0)
+    val = x/8
+    assert(val.getValue() == 0.0)
+    assert(val.getDeriv()['x'] == 0.125)
+
+    x = ad.Scalar('x', 3)
+    with pytest.raises(ZeroDivisionError):
+        x / 0.0
+        
+    x = ad.Scalar('x', 3)
+    with pytest.raises(ZeroDivisionError):
+        x / ad.Scalar('z', 0.0)
+        
+    with pytest.raises(TypeError):
+        x / "0"
+        
+def test_rtruediv():
+    
+    x,y=Scalar('x', 3),Scalar('y', 2)
+    val = x/y
+    assert(val.getValue() ==1.5)
+    assert(val.getDeriv()['x'] ==0.5)
+    assert(val.getDeriv()['y'] ==-0.75)
+
+    y=Scalar('y', 1)
+    val = 10/y
+    assert(val.getValue() ==10.0)
+    assert(val.getDeriv()['y'] ==-10.0)
+
+    y=Scalar('y', 2)
+    val = 8/y
+    assert(val.getValue()=4.0 )
+    assert(val.getDeriv()['y']=-2.0)
+
+        
+    y = ad.Scalar('x', 0.0)
+    with pytest.raises(ZeroDivisionError):
+        3 / y
+        
+    with pytest.raises(TypeError):
+        "3"/y
 
 
 def test_iadd():
