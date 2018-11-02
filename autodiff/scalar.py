@@ -182,7 +182,7 @@ class Scalar():
 
         NOTES
         =====
-        PRE: 
+        PRE: g
              - b is an int or float or Scalar
         POST:
              - self is not changed by the function
@@ -253,8 +253,8 @@ class Scalar():
         >>> np.isclose(y._deriv['x'], 4 * np.log(2))
         True
         """
-        powered = Scalar(None, self._val ** b)
-        powered._deriv.pop(None, None)
+        powered = Scalar(None, b ** self._val);
+        powered._deriv.pop(None, None); #get rid of None in the dictionary
         for variable in self._deriv.keys():
             powered._deriv[variable] = (b ** self._val) * np.log(b) * self._deriv[variable]
         return powered
