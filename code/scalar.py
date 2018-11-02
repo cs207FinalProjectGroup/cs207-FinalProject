@@ -56,12 +56,12 @@ class Scalar():
 		>>> z = x + y
 		>>> z._val
 		3.0
-		>>> z._der
+		>>> z._deriv
 		{'x': 1.0, 'y': 1.0}
 		>>> z = x + 1
 		>>> z._val
 		3.0
-		>>> z._der
+		>>> z._deriv
 		{'x': 1.0}
 
 		"""
@@ -113,12 +113,12 @@ class Scalar():
 		>>> z = x * y
 		>>> z._val
 		2.0
-		>>> z._der
+		>>> z._deriv
 		{'x': 1.0, 'y': 2.0}
 		>>> z = x * 2
 		>>> z._val
 		4.0
-		>>> z._der
+		>>> z._deriv
 		{'x': 2.0}
 
 		"""
@@ -189,9 +189,9 @@ class Scalar():
 		=========
 		>>> x = Scalar('x', 2)
 		>>> y = x ** 2
-		>>> z._val
+		>>> y._val
 		4.0
-		>>> z._der
+		>>> y._deriv
 		{'x': 2.0}
 
 		"""
@@ -244,9 +244,9 @@ class Scalar():
 		=========
 		>>> x = Scalar('x', 2)
 		>>> y = 2 ** x
-		>>> z._val
+		>>> y._val
 		4.0
-		>>> z._der
+		>>> y._deriv
 		{'x': 4 * np.log(2)}
 
 		"""
@@ -319,15 +319,15 @@ class Scalar():
 			for variable in (set(self._deriv.keys()) | set(b._deriv.keys())):
 				# _derivative of x^y with respect to y (exponential rule)
 				if variable not in self._deriv.keys():
-					self._deriv[variable] = (original_self_val ** b._val) * np.log(self._val) * b._deriv[variable]
+					self._deriv[variable] = (original_self_val ** b._val) * np.log(original_self_val) * b._deriv[variable]
 				# _derivative of x^y with respect to x (power rule)
 				elif variable not in b._deriv.keys():
 					self._deriv[variable] = b._val * (original_self_val ** (b._val - 1)) * self._deriv[variable] 
 				# y = x ^ x 
 				# Credits to http://mathcentral.uregina.ca/QQ/database/QQ.09.03/cher1.html for formula
 				else:
-					self._deriv[variable] = original_self_val * self._val * (np.log(self._val) + 1) * self._deriv[variable] 
-		
+					self._deriv[variable] = original_self_val * original_self_val * (np.log(original_self_val) + 1) * self._deriv[variable] 
+
 		except AttributeError:
 			self._val **= b
 			for variable in self._deriv.keys():
