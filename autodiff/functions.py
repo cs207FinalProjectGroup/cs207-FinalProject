@@ -132,6 +132,13 @@ def power(x, y):
 
     EXAMPLES
     =========
+    >>> a = Scalar('a', 3)
+    >>> b = power(2.0, a)
+    >>> b._val
+    8.0
+    >>> b._deriv
+    {'a': 5.545177444479562}
+    >>> x = Scalar('x', 2)
     >>> x = Scalar('x', 2)
     >>> y = Scalar('y', 3)
     >>> z = power(x, y)
