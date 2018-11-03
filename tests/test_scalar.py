@@ -94,6 +94,15 @@ def test_pow():
     val = x**2
     assert(val.getValue()==0.0)
     assert(val.getDeriv()['x']==0.0)
+
+    x = ad.Scalar('x', 0)
+    with pytest.raises(ZeroDivisionError):
+        x ** 0.8
+    with pytest.raises(ZeroDivisionError):
+        x ** -0.1
+    y = x ** 3.5
+    assert(y.getValue() == 0)
+    assert(y.getDeriv()['x'] == 0)
     
 
 def test_rpow():
