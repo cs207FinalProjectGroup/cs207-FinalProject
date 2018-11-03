@@ -150,7 +150,6 @@ class Scalar():
         
     def __neg__(self):
         """Negates both the value and the derivatives."""
-
         negated = Scalar(None, -self._val)
         negated._deriv.pop(None, None)
         for variable in self._deriv.keys():
@@ -203,7 +202,6 @@ class Scalar():
         {'x': 4.0}
 
         """
-        
         try:
             new_val = self._val ** b._val;
             #check that a negative number is not being raised to a decimal. Python returns a complex number if this occurs.
@@ -228,7 +226,7 @@ class Scalar():
                 # y = x ^ x 
                 # Credits to http://mathcentral.uregina.ca/QQ/database/QQ.09.03/cher1.html for formula
                 else:
-                    powered._deriv[variable] = self._val * self._val * (np.log(self._val) + 1) * self._deriv[variable] 
+                    powered._deriv[variable] = (self._val ** b._val) * (np.log(self._val) + b._val / (self._val)) * self._deriv[variable] 
             
         except AttributeError:
             new_val = self._val ** b;
@@ -333,7 +331,6 @@ class Scalar():
 
     def __itruediv__(self, b):
         """In place division. Changes the values and derivatives of self directly."""
-        
         result = self / b; #use truediv to calculate the value and derivative
         self._val = result._val; #reassign the value of self
         self._deriv = result._deriv; #reassign the value of deriv
@@ -364,7 +361,7 @@ class Scalar():
         """
         derivs = [];
         for variable in variables:
-            derivs.append(self._deriv[variable]);
+            derivs.append(self._deriv.get(variable, 0));
         derivs = np.array(derivs);
         return derivs;
         
