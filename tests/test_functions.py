@@ -45,3 +45,15 @@ def test_cos():
 
     assert (np.isclose(val.getValue(),1.0)==True)
     assert (np.isclose(val.getDeriv()['x'],0.0)==True)
+
+def test_exp():
+    x = ad.Scalar('x', 8)
+    y = ad.exp(x)
+    assert(np.isclose(y.getValue(), np.exp(8)))
+    assert(np.isclose(y.getDeriv()['x'], np.exp(8)))
+
+    x = ad.Scalar('x', -3)
+    x._deriv['x'] = -2.3
+    y = ad.exp(x)
+    assert(np.isclose(y.getValue(), np.exp(-3)))
+    assert(np.isclose(y.getDeriv()['x'], -2.3 * np.exp(-3)))
