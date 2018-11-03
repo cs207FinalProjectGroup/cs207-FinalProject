@@ -358,7 +358,11 @@ def test_ipow():
     with pytest.raises(ZeroDivisionError):
         x **= 0.5
 
-
-
+    x = ad.Scalar('x', 0)
+    y = ad.Scalar('y', 0)
+    x **= y
+    assert(x.getValue() == 1)
+    assert(x.getDeriv()['x'] == 0)
+    assert(x.getDeriv()['y'] == 0)
 
 
