@@ -25,6 +25,9 @@ class Scalar():
         """String representation of the Scalar object. Tells both the value and the derivatives."""
         return "Value: {0}, Derivatives: {1}".format(self._val, self._deriv);
     
+    def __repr__(self):
+        return "Scalar({0})".format(self._val);
+    
     def __add__(self, b):
         """Returns a Scalar object representing the operation x + b, where x is the current Scalar object and b is either another Scalar object or a numeric value.
         Calculations of new Scalar's value and derivatives follow rules of addition and sum rule in differentiation respectively. Due to commutativity, x + b
