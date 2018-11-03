@@ -168,9 +168,10 @@ def test_rtruediv():
     y = ad.Scalar('x', 0.0)
     with pytest.raises(ZeroDivisionError):
         3 / y
-        
+    
+    z = ad.Scalar('x', 34)
     with pytest.raises(TypeError):
-        "3"/y
+        "3"/z
 
 
 def test_iadd():
@@ -342,7 +343,7 @@ def test_ipow():
     x = ad.Scalar('x', 0)
     x **= 1.2
     assert(x.getValue() == 0)
-    assert(x.getDeriv() == 0)
+    assert(x.getDeriv()['x'] == 0)
 
     x = ad.Scalar('x', 0)
     with pytest.raises(ZeroDivisionError):

@@ -166,6 +166,7 @@ class Scalar():
         """
         return b + -self
 
+        
     def __pow__(self, b):
         """Returns a Scalar object representing the operation x ** b, where x is the current Scalar object and b is either another Scalar object or a numeric value.
         Calculations of new Scalar's value and derivations follow rules for exponents and power rule of differentiation respectively. 
@@ -199,9 +200,23 @@ class Scalar():
         {'x': 4.0}
 
         """
+        
+        #check if self < 0 and b is a float
+        
         try:
-            powered = Scalar(None, self._val ** b._val)
-            powered._deriv.pop(None, None)
+            new_val = self._val ** b._val;
+            #check that a negative number is not being raised to a decimal. Python returns a complex number if this occurs.
+            if np.iscomplex(new_val):
+                raise ValueError("Cannot raise a negative number ({0}) to a decimal {1}".format(self._val, b._val) );
+            
+            powered = Scalar(None, new_val); #create new Scalar with updated value
+            powered._deriv.pop(None, None);
+            #check if both self and b are zero values because derivative for all variables is just 0
+            if self._val == 0 and b._val == 0:
+                for variable in (set(self._deriv.keys()) | set(b._deriv.keys())):
+                    powered._deriv[variable] = 0;
+                return powered;
+            #if b != 0
             for variable in (set(self._deriv.keys()) | set(b._deriv.keys())):
                 # _derivative of x^y with respect to y (exponential rule)
                 if variable not in self._deriv.keys():
@@ -215,8 +230,18 @@ class Scalar():
                     powered._deriv[variable] = self._val * self._val * (np.log(self._val) + 1) * self._deriv[variable] 
             
         except AttributeError:
-            powered = Scalar(None, self._val ** b)
+            new_val = self._val ** b;
+            #check that a negative number is not being raised to a decimal. Python returns a complex number if this occurs.
+            if np.iscomplex(new_val):
+                raise ValueError("Cannot raise a negative number ({0}) to a decimal {1}".format(self._val, b) );
+            powered = Scalar(None, self._val ** b);
             powered._deriv.pop(None, None)
+            #check if both self and b are zero values because derivative for all variables is just 0
+            if self._val == 0 and b == 0:
+                for variable in set(self._deriv.keys()):
+                    powered._deriv[variable] = 0;
+                return powered;
+            #b != 0
             for variable in self._deriv.keys():
                 powered._deriv[variable] = b * (self._val ** (b - 1)) * self._deriv[variable]
         return powered
@@ -266,7 +291,7 @@ class Scalar():
         return self * (b ** -1)
     
     def __rtruediv__(self, b):
-        """Returns a Scalar object representing the operation b / x, where x is the current Scalar object and b is either another Scalar object or a numeric value.
+        """Returns a Scalar object representing the operation b / x, where x is the current Scalar object and b is  a numeric value.
         This is just b multiplied by (x ** -1).
         """
         return b * (self ** -1)
