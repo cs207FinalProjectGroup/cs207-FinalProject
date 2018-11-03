@@ -303,20 +303,10 @@ class Scalar():
 
     def __iadd__(self, b):
         """In place addition. Changes the values and derivatives of self directly."""
-        try:
-            self._val += b._val
-            for variable in (set(self._deriv.keys()) | set(b._deriv.keys())):
-                if variable not in self._deriv.keys():
-                    self._deriv[variable] = b._deriv[variable]
-                #_derivative is from self, so do not need to do anything
-                elif variable not in b._deriv.keys():
-                    continue
-                else:
-                    self._deriv[variable] += b._deriv[variable] 
-                    
-        except AttributeError:
-            self._val += b
-        return self
+        result = self + b;
+        self._val = result._val;
+        self._deriv = result._deriv;
+        return self;
 
 
     def __isub__(self, b):
@@ -327,30 +317,14 @@ class Scalar():
 
     def __imul__(self, b):
         """In place multiplication. Changes the values and derivatives of self directly."""
-        try:
-            #need original self._val for _derivative computations
-            original_self_val = self._val
-            self._val *= b._val 
-            for variable in (set(self._deriv.keys()) | set(b._deriv.keys())):
-                if variable not in self._deriv.keys():
-                    self._deriv[variable] = original_self_val * b._deriv[variable]
-                elif variable not in b._deriv.keys():
-                    self._deriv[variable] = b._val * self._deriv[variable] 
-                else:
-                    self._deriv[variable] = original_self_val * b._deriv[variable] + b._val * self._deriv[variable] 
-
-        except AttributeError:
-            #technically can multiply string by number. Prevent this edge case from happening.
-            self._val *= float(b)
-            for variable in self._deriv.keys():
-                self._deriv[variable] = b * self._deriv[variable]
-        return self
+        result = self * b;
+        self._val = result._val;
+        self._deriv = result._deriv;
+        return self;
     
 
     def __ipow__(self, b):
         """In place exponent. Changes the values and derivatives of self directly."""
-
-        #just use __pow__ to compute- Bhaven
         result = self ** b;
         self._val = result._val;
         self._deriv = result._deriv;
@@ -372,8 +346,8 @@ class Scalar():
     
 
     def getDeriv(self):
-        """Returns the derivatives dictionary. Users can still potentially change it. Will resolve later. Maybe just return a copy."""
-        return self._deriv;
+        """Returns a copy of the derivatives dictionary so that users cannot change the actual dictionary stored by the Scalar object."""
+        return self._deriv.copy();
     
 
     def getGradient(self, variables):
