@@ -303,7 +303,7 @@ def test_itruediv():
     y._deriv['y'] = -2
     x /= y
     assert(x.getValue() == 1.5)
-    assert(x.getDeriv()['y'] == 3/8)
+    assert(x.getDeriv()['y'] == 1.5)
 
 def test_ipow():
     x = ad.Scalar('x', 2)
