@@ -144,8 +144,10 @@ def power(x, y):
     >>> z = power(x, y)
     >>> z._val
     8.0
-    >>> z._deriv
-    {'x': 12.0, 'y': 5.545177444479562}
+    >>> z._deriv['x']
+    12.0
+    >>> np.isclose(z._deriv['y'], 5.545177444479562)
+    True
 
     """
     return x**y;
