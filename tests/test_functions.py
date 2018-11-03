@@ -3,7 +3,7 @@ import os
 import numpy as np
 import pytest
 
-sys.path.append(os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__)))))
+sys.path.append('..')
 import autodiff as ad
 
 def test_sin():
