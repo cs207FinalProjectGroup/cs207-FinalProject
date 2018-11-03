@@ -372,3 +372,12 @@ def test_ipow():
 
     assert(x.getValue() == 8)
     assert(abs(x.getDeriv()['x'] - 8*(1.5 + np.log(2))) < 1e-7)
+
+def test_str():
+    x = ad.Scalar('x', 2)
+    y = ad.Scalar('y', 3)
+    z = x + y
+    assert(str(z) == "Value: 5.0, Derivatives: {'x': 1.0, 'y': 1.0}")
+
+def test_repr():
+    assert(repr(ad.Scalar('x', 2)) == "Scalar(2.0)")

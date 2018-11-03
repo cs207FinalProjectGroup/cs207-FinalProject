@@ -46,15 +46,6 @@ def test_cos():
     assert (np.isclose(val.getValue(),1.0)==True)
     assert (np.isclose(val.getDeriv()['x'],0.0)==True)
 
-def test_str():
-    x = ad.Scalar('x', 2)
-    y = ad.Scalar('y', 3)
-    z = x + y
-    assert(str(z) == "Value: 5.0, Derivatives: {'x': 1.0, 'y': 1.0}")
-
-def test_repr():
-    assert(repr(ad.Scalar('x', 2)) == "Scalar(2.0)")
-
 
 def test_exp():
     x = ad.Scalar('x', 8)
