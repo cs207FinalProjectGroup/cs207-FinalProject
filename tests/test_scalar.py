@@ -365,4 +365,10 @@ def test_ipow():
     assert(x.getDeriv()['x'] == 0)
     assert(x.getDeriv()['y'] == 0)
 
+    x = ad.Scalar('x', 2)
+    y = ad.Scalar('y', 1)
 
+    x **= x + y
+
+    assert(x.getValue() == 8)
+    assert(abs(x.getDeriv()['x'] - 8*(1.5 + np.log(2))) < 1e-7)
