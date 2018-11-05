@@ -25,6 +25,9 @@ class Scalar():
         """String representation of the Scalar object. Tells both the value and the derivatives."""
         return "Value: {0}, Derivatives: {1}".format(self._val, self._deriv);
     
+    def __repr__(self):
+        return "Scalar({0})".format(self._val);
+    
     def __add__(self, b):
         """Returns a Scalar object representing the operation x + b, where x is the current Scalar object and b is either another Scalar object or a numeric value.
         Calculations of new Scalar's value and derivatives follow rules of addition and sum rule in differentiation respectively. Due to commutativity, x + b
@@ -147,7 +150,6 @@ class Scalar():
         
     def __neg__(self):
         """Negates both the value and the derivatives."""
-
         negated = Scalar(None, -self._val)
         negated._deriv.pop(None, None)
         for variable in self._deriv.keys():
@@ -166,6 +168,7 @@ class Scalar():
         """
         return b + -self
 
+        
     def __pow__(self, b):
         """Returns a Scalar object representing the operation x ** b, where x is the current Scalar object and b is either another Scalar object or a numeric value.
         Calculations of new Scalar's value and derivations follow rules for exponents and power rule of differentiation respectively. 
@@ -200,8 +203,19 @@ class Scalar():
 
         """
         try:
-            powered = Scalar(None, self._val ** b._val)
-            powered._deriv.pop(None, None)
+            new_val = self._val ** b._val;
+            #check that a negative number is not being raised to a decimal. Python returns a complex number if this occurs.
+            if np.iscomplex(new_val):
+                raise ValueError("Cannot raise a negative number ({0}) to a decimal {1}".format(self._val, b._val) );
+            
+            powered = Scalar(None, new_val); #create new Scalar with updated value
+            powered._deriv.pop(None, None);
+            #check if both self and b are zero values because derivative for all variables is just 0
+            if self._val == 0 and b._val == 0:
+                for variable in (set(self._deriv.keys()) | set(b._deriv.keys())):
+                    powered._deriv[variable] = 0;
+                return powered;
+            #if b != 0
             for variable in (set(self._deriv.keys()) | set(b._deriv.keys())):
                 # _derivative of x^y with respect to y (exponential rule)
                 if variable not in self._deriv.keys():
@@ -212,15 +226,26 @@ class Scalar():
                 # y = x ^ x 
                 # Credits to http://mathcentral.uregina.ca/QQ/database/QQ.09.03/cher1.html for formula
                 else:
-                    powered._deriv[variable] = self._val * self._val * (np.log(self._val) + 1) * self._deriv[variable] 
+                    powered._deriv[variable] = (self._val ** b._val) * (np.log(self._val) + b._val / (self._val)) * self._deriv[variable] 
             
         except AttributeError:
-            powered = Scalar(None, self._val ** b)
+            new_val = self._val ** b;
+            #check that a negative number is not being raised to a decimal. Python returns a complex number if this occurs.
+            if np.iscomplex(new_val):
+                raise ValueError("Cannot raise a negative number ({0}) to a decimal {1}".format(self._val, b) );
+            powered = Scalar(None, self._val ** b);
             powered._deriv.pop(None, None)
+            #check if both self and b are zero values because derivative for all variables is just 0
+            if self._val == 0 and b == 0:
+                for variable in set(self._deriv.keys()):
+                    powered._deriv[variable] = 0;
+                return powered;
+            #b != 0
             for variable in self._deriv.keys():
-                powered._deriv[variable] = b * (self._val ** (b - 1)) * self._deriv[variable]
-        return powered
+                powered._deriv[variable] = b * (self._val ** (b - 1)) * self._deriv[variable];
+        return powered;
         
+
     def __rpow__(self, b):
         """Returns a Scalar object representing the operation c ** x, where x is the current Scalar object and c is either another Scalar object or a numeric value.
         Calculations of new Scalar's value and derivations follow rules for exponents and power rule of differentiation respectively. 
@@ -256,103 +281,72 @@ class Scalar():
         powered = Scalar(None, b ** self._val);
         powered._deriv.pop(None, None); #get rid of None in the dictionary
         for variable in self._deriv.keys():
-            powered._deriv[variable] = (b ** self._val) * np.log(b) * self._deriv[variable]
-        return powered
+            powered._deriv[variable] = (b ** self._val) * np.log(b) * self._deriv[variable];
+        return powered;
     
+
     def __truediv__(self, b):
         """Returns a Scalar object representing the operation x / b, where x is the current Scalar object and b is either another Scalar object or a numeric value.
         This is just x multiplied by (b ** -1).
         """
-        return self * (b ** -1)
+        return self * (b ** -1);
     
+
     def __rtruediv__(self, b):
-        """Returns a Scalar object representing the operation b / x, where x is the current Scalar object and b is either another Scalar object or a numeric value.
+        """Returns a Scalar object representing the operation b / x, where x is the current Scalar object and b is  a numeric value.
         This is just b multiplied by (x ** -1).
         """
-        return b * (self ** -1)
+        return b * (self ** -1);
     
+
     def __iadd__(self, b):
         """In place addition. Changes the values and derivatives of self directly."""
-        try:
-            self._val += b._val
-            for variable in (set(self._deriv.keys()) | set(b._deriv.keys())):
-                if variable not in self._deriv.keys():
-                    self._deriv[variable] = b._deriv[variable]
-                #_derivative is from self, so do not need to do anything
-                elif variable not in b._deriv.keys():
-                    continue
-                else:
-                    self._deriv[variable] += b._deriv[variable] 
-                    
-        except AttributeError:
-            self._val += b
-        return self
+        result = self + b;
+        self._val = result._val;
+        self._deriv = result._deriv;
+        return self;
+
 
     def __isub__(self, b):
         """In place subtraction. Changes the values and derivatives of self directly."""
         self += -b
         return self
     
+
     def __imul__(self, b):
         """In place multiplication. Changes the values and derivatives of self directly."""
-        try:
-            #need original self._val for _derivative computations
-            original_self_val = self._val
-            self._val *= b._val 
-            for variable in (set(self._deriv.keys()) | set(b._deriv.keys())):
-                if variable not in self._deriv.keys():
-                    self._deriv[variable] = original_self_val * b._deriv[variable]
-                elif variable not in b._deriv.keys():
-                    self._deriv[variable] = b._val * self._deriv[variable] 
-                else:
-                    self._deriv[variable] = original_self_val * b._deriv[variable] + b._val * self._deriv[variable] 
-
-        except AttributeError:
-            #technically can multiply string by number. Prevent this edge case from happening.
-            self._val *= float(b)
-            for variable in self._deriv.keys():
-                self._deriv[variable] = b * self._deriv[variable]
-        return self
+        result = self * b;
+        self._val = result._val;
+        self._deriv = result._deriv;
+        return self;
     
+
     def __ipow__(self, b):
         """In place exponent. Changes the values and derivatives of self directly."""
-        original_self_val = self._val
-        try:
-            self._val **= b._val
-            for variable in (set(self._deriv.keys()) | set(b._deriv.keys())):
-                # _derivative of x^y with respect to y (exponential rule)
-                if variable not in self._deriv.keys():
-                    self._deriv[variable] = (original_self_val ** b._val) * np.log(original_self_val) * b._deriv[variable]
-                # _derivative of x^y with respect to x (power rule)
-                elif variable not in b._deriv.keys():
-                    self._deriv[variable] = b._val * (original_self_val ** (b._val - 1)) * self._deriv[variable] 
-                # y = x ^ x 
-                # Credits to http://mathcentral.uregina.ca/QQ/database/QQ.09.03/cher1.html for formula
-                else:
-                    self._deriv[variable] = original_self_val * original_self_val * (np.log(original_self_val) + 1) * self._deriv[variable] 
-
-        except AttributeError:
-            self._val **= b
-            for variable in self._deriv.keys():
-                self._deriv[variable] = b * (original_self_val ** (b - 1)) * self._deriv[variable]
-        return self
+        result = self ** b;
+        self._val = result._val;
+        self._deriv = result._deriv;
+        return self;
     
+
     def __itruediv__(self, b):
         """In place division. Changes the values and derivatives of self directly."""
-        
         result = self / b; #use truediv to calculate the value and derivative
         self._val = result._val; #reassign the value of self
         self._deriv = result._deriv; #reassign the value of deriv
         return self;
     
+
     def getValue(self):
         """Returns the value of the scalar so that users does not access the value directly and potentially change it."""
-        return self._val
+        return self._val;
     
+
     def getDeriv(self):
-        """Returns the derivatives dictionary. Users can still potentially change it. Will resolve later. Maybe just return a copy."""
-        return self._deriv
+        """Returns a copy of the derivatives dictionary so that users cannot change the actual dictionary stored by the Scalar object."""
+        return self._deriv.copy();
     
+
     def getGradient(self, variables):
         """Returns the derivatives as a numpy array, with the option to choose which specific partial derivatives to return.
          INPUTS
@@ -364,13 +358,12 @@ class Scalar():
         ========
         derivs: numpy array
         The numpy array of partial derivatives 
-
         """
-        derivs = []
+        derivs = [];
         for variable in variables:
-            derivs.append(self._deriv[variable])
-        derivs = np.array(derivs)
-        return derivs
+            derivs.append(self._deriv.get(variable, 0));
+        derivs = np.array(derivs);
+        return derivs;
         
     __radd__ = __add__
     __rmul__ = __mul__

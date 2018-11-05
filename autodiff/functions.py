@@ -29,8 +29,8 @@ def sin(sclr: Scalar):
     >>> z = sin(x)
     >>> z._val
     0.9092974268256817
-    >>> z._deriv
-    {'x': -0.4161468365471424}
+    >>> np.isclose(z._deriv['x'], -0.41614683654714241)
+    True
     '''
     
     result = Scalar(None, np.sin(sclr._val) ); #create new Scalar object with updated value
@@ -66,8 +66,8 @@ def cos(sclr: Scalar):
     >>> z = cos(x)
     >>> z._val
     -0.4161468365471424
-    >>> z._deriv
-    {'x': -0.9092974268256817}
+    >>> np.isclose(z._deriv['x'], -0.90929742682568171)
+    True
     '''
     
     result = Scalar(None, np.cos(sclr._val) ); #create new Scalar object with updated value
@@ -103,8 +103,8 @@ def tan(sclr: Scalar):
     >>> z = tan(x)
     >>> z._val
     -2.185039863261519
-    >>> z._deriv
-    {'x': 5.774399204041917}
+    >>> np.isclose(z._deriv['x'], 5.7743992040419174)
+    True
     '''
     #return sin(Scalar) / cos(Scalar) since these functions are already implemented
     return sin(sclr) / cos(sclr);
@@ -136,20 +136,23 @@ def power(x, y):
     >>> b = power(2.0, a)
     >>> b._val
     8.0
-    >>> b._deriv
-    {'a': 5.545177444479562}
+    >>> np.isclose(b._deriv['a'], 5.5451774444795623)
+    True
     >>> x = Scalar('x', 2)
     >>> x = Scalar('x', 2)
     >>> y = Scalar('y', 3)
     >>> z = power(x, y)
     >>> z._val
     8.0
-    >>> z._deriv
-    {'x': 12.0, 'y': 5.545177444479562}
-
+    >>> z._deriv['x']
+    12.0
+    >>> np.isclose(z._deriv['y'], 5.545177444479562)
+    True
     """
-    return x**y;
-
+    if isinstance(x, Scalar) or isinstance(y, Scalar):
+        return x**y;
+    else:
+        raise Exception("One of the two arguments must be a Scalar object");
     
 def exp(sclr: Scalar):
     """Returns a Scalar object representing the operation e^(sclar), where 'sclr' is the current Scalar object. Calculations of new Scalar's derivatives follow the power rule of differentiation.
@@ -176,9 +179,8 @@ def exp(sclr: Scalar):
     >>> y = exp(x)
     >>> y._val
     7.38905609893065
-    >>> y._deriv
-    {'x': 7.38905609893065}
-
+    >>> np.isclose(y._deriv['x'], 7.38905609893065)
+    True
     """
     result = Scalar(None, np.exp(sclr._val) ); #create new Scalar object with value = e^val
     result._deriv = sclr._deriv.copy(); #result's derivative map is a copy of the passed in Scalar

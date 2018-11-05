@@ -3,7 +3,7 @@ import os
 import numpy as np
 import pytest
 
-sys.path.append(os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__)))))
+sys.path.append('..')
 import autodiff as ad
 
 
@@ -94,6 +94,15 @@ def test_pow():
     val = x**2
     assert(val.getValue()==0.0)
     assert(val.getDeriv()['x']==0.0)
+
+    x = ad.Scalar('x', 0)
+    with pytest.raises(ZeroDivisionError):
+        x ** 0.8
+    with pytest.raises(ZeroDivisionError):
+        x ** -0.1
+    y = x ** 3.5
+    assert(y.getValue() == 0)
+    assert(y.getDeriv()['x'] == 0)
     
 
 def test_rpow():
@@ -161,16 +170,17 @@ def test_rtruediv():
 
     y=ad.Scalar('y', 2)
     val = 8/y
-    assert(val.getValue()=4.0 )
-    assert(val.getDeriv()['y']=-2.0)
+    assert(val.getValue()==4.0 )
+    assert(val.getDeriv()['y']==-2.0)
 
         
     y = ad.Scalar('x', 0.0)
     with pytest.raises(ZeroDivisionError):
         3 / y
-        
+    
+    z = ad.Scalar('x', 34)
     with pytest.raises(TypeError):
-        "3"/y
+        "3"/z
 
 
 def test_iadd():
@@ -302,7 +312,7 @@ def test_itruediv():
     y._deriv['y'] = -2
     x /= y
     assert(x.getValue() == 1.5)
-    assert(x.getDeriv()['y'] == 3/8)
+    assert(x.getDeriv()['y'] == 1.5)
 
 def test_ipow():
     x = ad.Scalar('x', 2)
@@ -342,13 +352,39 @@ def test_ipow():
     x = ad.Scalar('x', 0)
     x **= 1.2
     assert(x.getValue() == 0)
-    assert(x.getDeriv() == 0)
+    assert(x.getDeriv()['x'] == 0)
 
     x = ad.Scalar('x', 0)
     with pytest.raises(ZeroDivisionError):
         x **= 0.5
 
+    x = ad.Scalar('x', 0)
+    y = ad.Scalar('y', 0)
+    x **= y
+    assert(x.getValue() == 1)
+    assert(x.getDeriv()['x'] == 0)
+    assert(x.getDeriv()['y'] == 0)
 
+    x = ad.Scalar('x', 2)
+    y = ad.Scalar('y', 1)
 
+    x **= x + y
 
+    assert(x.getValue() == 8)
+    assert(abs(x.getDeriv()['x'] - 8*(1.5 + np.log(2))) < 1e-7)
 
+def test_str():
+    x = ad.Scalar('x', 2)
+    y = ad.Scalar('y', 3)
+    z = x + y
+    assert(str(z) == "Value: 5.0, Derivatives: {'x': 1.0, 'y': 1.0}" or
+           str(z) == "Value: 5.0, Derivatives: {'y': 1.0, 'x': 1.0}")
+
+def test_repr():
+    assert(repr(ad.Scalar('x', 2)) == "Scalar(2.0)")
+
+def test_get_gradients():
+    x = ad.Scalar('x', 4)
+    y = -2 * x
+    d = y.getGradient(['x', 'z'])
+    assert(np.array_equal(d, [-2, 0]))
