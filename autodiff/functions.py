@@ -148,10 +148,11 @@ def power(x, y):
     12.0
     >>> np.isclose(z._deriv['y'], 5.545177444479562)
     True
-
     """
-    return x**y;
-
+    if isinstance(x, Scalar) or isinstance(y, Scalar):
+        return x**y;
+    else:
+        return float(x**y);
     
 def exp(sclr: Scalar):
     """Returns a Scalar object representing the operation e^(sclar), where 'sclr' is the current Scalar object. Calculations of new Scalar's derivatives follow the power rule of differentiation.
