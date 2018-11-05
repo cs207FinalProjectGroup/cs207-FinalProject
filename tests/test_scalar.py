@@ -382,3 +382,9 @@ def test_str():
 
 def test_repr():
     assert(repr(ad.Scalar('x', 2)) == "Scalar(2.0)")
+
+def test_get_gradients():
+    x = ad.Scalar('x', 4)
+    y = -2 * x
+    d = y.getGradient(['x', 'z'])
+    assert(np.array_equal(d, [-2, 0]))
