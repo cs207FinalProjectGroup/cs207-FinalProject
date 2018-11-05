@@ -377,7 +377,8 @@ def test_str():
     x = ad.Scalar('x', 2)
     y = ad.Scalar('y', 3)
     z = x + y
-    assert(str(z) == "Value: 5.0, Derivatives: {'x': 1.0, 'y': 1.0}")
+    assert(str(z) == "Value: 5.0, Derivatives: {'x': 1.0, 'y': 1.0}" or
+           str(z) == "Value: 5.0, Derivatives: {'y': 1.0, 'x': 1.0}")
 
 def test_repr():
     assert(repr(ad.Scalar('x', 2)) == "Scalar(2.0)")
