@@ -58,3 +58,9 @@ def test_exp():
     y = ad.exp(x)
     assert(np.isclose(y.getValue(), np.exp(-3)))
     assert(np.isclose(y.getDeriv()['x'], -2.3 * np.exp(-3)))
+
+
+def test_power():
+    with pytest.raises(Exception):
+        ad.power(5, 3)
+
