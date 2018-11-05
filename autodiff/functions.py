@@ -152,7 +152,7 @@ def power(x, y):
     if isinstance(x, Scalar) or isinstance(y, Scalar):
         return x**y;
     else:
-        return float(x**y);
+        raise Exception("One of the two arguments must be a Scalar object");
     
 def exp(sclr: Scalar):
     """Returns a Scalar object representing the operation e^(sclar), where 'sclr' is the current Scalar object. Calculations of new Scalar's derivatives follow the power rule of differentiation.
