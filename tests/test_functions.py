@@ -61,6 +61,5 @@ def test_exp():
 
 
 def test_power():
-    with pytest.raises(Exception):
-        ad.power(5, 3)
+    assert(ad.power(5, 3) == 125.0)
 

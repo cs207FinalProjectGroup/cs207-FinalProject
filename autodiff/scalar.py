@@ -149,7 +149,7 @@ class Scalar():
         return multiplied
         
     def __neg__(self):
-        """Negates both the value and the derivatives."""
+        """Negates both the value and the derivatives of the current Scalar object."""
         negated = Scalar(None, -self._val)
         negated._deriv.pop(None, None)
         for variable in self._deriv.keys():
@@ -159,12 +159,78 @@ class Scalar():
     def __sub__(self, b):
         """Returns a Scalar object representing the operation x - b, where x is the current Scalar object and b is either another Scalar object or a numeric value.
         This is just adding the current Scalar with the negation of the other term.
+
+        INPUTS
+        =======   
+        b: int or float or Scalar
+        The constant or Scalar object we are subtracting from the current Scalar.
+
+        RETURNS
+        ========
+        Scalar
+        The new Scalar resulting from the operation.
+
+        NOTES
+        =====
+        PRE: 
+             - b is an int or float or Scalar
+        POST:
+             - self is not changed by the function
+             - b is not changed by the function
+             - returns a scalar object, resulting from subtracting b from self
+
+        EXAMPLES
+        =========
+        >>> x = Scalar('x', 2)
+        >>> y = Scalar('y', 1)
+        >>> z = x - y
+        >>> z._val
+        1.0
+        >>> z._deriv['x']
+        1.0
+        >>> z._deriv['y']
+        -1.0
+        >>> z = x - 1
+        >>> z._val
+        1.0
+        >>> z._deriv
+        {'x': 1.0}
+
         """
         return self + -b
     
     def __rsub__(self, b):
         """Returns a Scalar object representing the operation b - x, where x is the current Scalar object and b is either another Scalar object or a numeric value.
         This is just adding the negation of the current Scalar with the other term.
+        
+         INPUTS
+        =======   
+        b: int or float or Scalar
+        The constant or Scalar object we are subtracting the current Scalar object from.
+
+        RETURNS
+        ========
+        Scalar
+        The new Scalar resulting from the operation.
+
+        NOTES
+        =====
+        PRE: 
+             - b is an int or float or Scalar
+        POST:
+             - self is not changed by the function
+             - b is not changed by the function
+             - returns a scalar object, resulting from subtracting self from b
+
+        EXAMPLES
+        =========
+        >>> x = Scalar('x', 2)
+        >>> z = 1 - x
+        >>> z._val
+        -1.0
+        >>> z._deriv
+        {'x': -1.0}
+
         """
         return b + -self
 
@@ -288,6 +354,42 @@ class Scalar():
     def __truediv__(self, b):
         """Returns a Scalar object representing the operation x / b, where x is the current Scalar object and b is either another Scalar object or a numeric value.
         This is just x multiplied by (b ** -1).
+
+        INPUTS
+        =======   
+        b: int or float or Scalar
+        The constant or Scalar object we are dividing the current Scalar object by
+
+        RETURNS
+        ========
+        Scalar
+        The new Scalar resulting from dividing the current Scalar by b
+
+        NOTES
+        =====
+        PRE: 
+             - b is an int or float or Scalar
+        POST:
+             - self is not changed by the function
+             - b is not changed by the function
+             - returns a scalar object, resulting from dividing self by b
+
+        EXAMPLES
+        =========
+        >>> x = Scalar('x', 2)
+        >>> y = Scalar('y', 1)
+        >>> z = x / y
+        >>> z._val
+        2.0
+        >>> z._deriv['x']
+        1.0
+        >>> z._deriv['y']
+        -2.0
+        >>> z = x / 2
+        >>> z._val
+        1.0
+        >>> z._deriv['x']
+        0.5
         """
         return self * (b ** -1);
     
