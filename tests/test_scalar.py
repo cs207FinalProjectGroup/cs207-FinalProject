@@ -15,6 +15,12 @@ def test_add():
     assert(val.getDeriv()['x'] == 1.0)
     assert(val.getDeriv()['y'] == 1.0)
     
+    x,y = ad.Scalar('x', 2.0),ad.Scalar('y', 5.0)
+    val = x+y
+    assert(val.getValue() == 7.0)
+    assert(val.getDeriv()['x'] == 1.0)
+    assert(val.getDeriv()['y'] == 1.0)
+
     x,y = ad.Scalar('x', 0),ad.Scalar('y', 0)
     val = x+y
     assert(val.getValue() == 0.0)
@@ -32,6 +38,12 @@ def test_add():
 def test_mul():
     
     x,y = ad.Scalar('x', 5), ad.Scalar('y', 6)
+    val = x*y
+    assert (val.getValue()==30.0)
+    assert(val.getDeriv()['x']==6.0)
+    assert(val.getDeriv()['y']==5.0)
+
+    x,y = ad.Scalar('x', 5.0), ad.Scalar('y', 6.0)
     val = x*y
     assert (val.getValue()==30.0)
     assert(val.getDeriv()['x']==6.0)
@@ -57,6 +69,12 @@ def test_neg():
     assert(val.getDeriv()['x']==1.0)
     assert(val.getDeriv()['y']==-1.0)
 
+    x,y = ad.Scalar('x', 5.0), ad.Scalar('y', 1.0)
+    val = x-y
+    assert (val.getValue()==4.0)
+    assert(val.getDeriv()['x']==1.0)
+    assert(val.getDeriv()['y']==-1.0)
+
     x,y = ad.Scalar('x', 3), ad.Scalar('y', 5)
     val = x-y
     assert (val.getValue()==-2.0)
@@ -70,6 +88,11 @@ def test_sub():
     assert (val.getValue()==-4.0)
     assert(val.getDeriv()['x']==1.0)
     
+    x= ad.Scalar('x', 1.0)
+    val = x-5
+    assert (val.getValue()==-4.0)
+    assert(val.getDeriv()['x']==1.0)
+
     x= ad.Scalar('x', 0)
     val = x-3.3
     assert (val.getValue()==-3.3)
@@ -81,6 +104,11 @@ def test_sub():
 def test_pow():
     
     x=ad.Scalar('x', 2)
+    val = x**2
+    assert(val.getValue()==4.0)
+    assert(val.getDeriv()['x']==4.0)
+
+    x=ad.Scalar('x', 2.0)
     val = x**2
     assert(val.getValue()==4.0)
     assert(val.getDeriv()['x']==4.0)
@@ -113,6 +141,11 @@ def test_rpow():
     assert(val.getDeriv()['x'])
     assert(np.isclose(val._deriv['x'], 4.0 * np.log(2.0))==True)
 
+    x=ad.Scalar('x', 2.0)
+    val = 2.0**x
+    assert(val.getValue())
+    assert(val.getDeriv()['x'])
+    assert(np.isclose(val._deriv['x'], 4.0 * np.log(2.0))==True)
 
     x=ad.Scalar('x', 2)
     val = 3.0**x
@@ -128,6 +161,12 @@ def test_rpow():
 
 def test_truediv():
     x,y=ad.Scalar('x', 3),ad.Scalar('y', 2)
+    val = x/y
+    assert(val.getValue() == 1.5)
+    assert(val.getDeriv()['x']== 0.5)
+    assert(val.getDeriv()['y']== -0.75)
+
+    x,y=ad.Scalar('x', 3.0),ad.Scalar('y', 2.0)
     val = x/y
     assert(val.getValue() == 1.5)
     assert(val.getDeriv()['x']== 0.5)
@@ -158,6 +197,12 @@ def test_truediv():
 def test_rtruediv():
     
     x,y=ad.Scalar('x', 3),ad.Scalar('y', 2)
+    val = x/y
+    assert(val.getValue() ==1.5)
+    assert(val.getDeriv()['x'] ==0.5)
+    assert(val.getDeriv()['y'] ==-0.75)
+
+    x,y=ad.Scalar('x', 3.0),ad.Scalar('y', 2.0)
     val = x/y
     assert(val.getValue() ==1.5)
     assert(val.getDeriv()['x'] ==0.5)
