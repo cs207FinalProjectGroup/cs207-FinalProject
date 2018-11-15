@@ -61,7 +61,8 @@ def test_exp():
 
 
 def test_power():
-    assert(ad.power(5, 3) == 125.0);
+    assert(ad.power(5, 3) == 125.0)
+    
     
     
 def test_sqrt():
@@ -93,4 +94,3 @@ def test_sqrt():
     #test that sqrt function works with integer 0
     assert(ad.sqrt(0) == np.sqrt(0) ); #4**(0.5) = 2
         
-

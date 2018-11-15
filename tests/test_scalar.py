@@ -34,9 +34,13 @@ def test_add():
     assert (val.getDeriv()['x']==1.0)
     assert (val.getDeriv()['y']==-3.0)
     
-    
 def test_mul():
-    
+
+    x = ad.Scalar('x', 5)
+    val = 5 * x
+    assert (val.getValue()==25.0)
+    assert(val.getDeriv()['x']==5.0)
+
     x,y = ad.Scalar('x', 5), ad.Scalar('y', 6)
     val = x*y
     assert (val.getValue()==30.0)
@@ -100,6 +104,7 @@ def test_sub():
     
     with pytest.raises(TypeError):
         x - "5"
+
         
 def test_pow():
     
@@ -246,6 +251,12 @@ def test_iadd():
     x += 8
     assert(x.getValue() == 15)
     assert(x.getDeriv()['x'] == 1)
+    assert(x.getDeriv()['y'] == -2)
+
+    x += y + 8
+    assert(x.getValue() == 23)
+    assert(x.getDeriv()['x'] == 1)
+    assert(x.getDeriv()['y'] == -5)
 
 
 def test_isub():
@@ -279,12 +290,19 @@ def test_imul():
 
 
 def test_rsub():
+
+
     x = 2
     y = ad.Scalar('y', 5)
-
     z = x - y
     assert(z.getValue() == -3)
     assert(z.getDeriv()['y'] == -1)
+
+    x,y = ad.Scalar('x', 2.0), ad.Scalar('y', 5.0)
+    val = 2 - (x - y)
+    assert(val.getValue() == 5.0)
+    assert(val.getDeriv()['x'] == -1.0)
+    assert(val.getDeriv()['y'] == 1.0)
 
     y = ad.Scalar('y', 1)
     y._deriv['y'] = -3
@@ -297,12 +315,20 @@ def test_rsub():
 
 
 def test_radd():
+    
     x = 2
     y = ad.Scalar('y', 5)
 
     z = x + y
     assert(z.getValue() == 7)
     assert(z.getDeriv()['y'] == 1)
+
+    x,y = ad.Scalar('x', 2.0),ad.Scalar('y', 5.0)
+    val = 2 + (x+y)
+    assert(val.getValue() == 9.0)
+    assert(val.getDeriv()['x'] == 1.0)
+    assert(val.getDeriv()['y'] == 1.0)
+
 
     y = ad.Scalar('y', 1)
     y._deriv['y'] = -3
@@ -433,3 +459,52 @@ def test_get_gradients():
     y = -2 * x
     d = y.getGradient(['x', 'z'])
     assert(np.array_equal(d, [-2, 0]))
+    
+    
+def test_composite():
+
+    x = ad.Scalar('x', 2)
+    z = (5 * (x + 20)  / 10) ** 2
+    d = z.getGradient(['x'])
+    assert(z.getValue() == 121)
+    assert(np.array_equal(d, [11]))
+
+    x = ad.Scalar('x', 2)
+    y = ad.Scalar('y', 3)
+    z = (x + 20) * y
+    d = z.getGradient(['x', 'y'])
+    assert(z.getValue() == 66)
+    assert(np.array_equal(d, [3, 22]))
+
+    x = ad.Scalar('x', 1)
+    y = ad.Scalar('y', 3)
+    z = (x * y + x) * y
+    d = z.getGradient(['x', 'y'])
+    assert(z.getValue() == 12)
+    assert(np.array_equal(d, [12, 7]))
+
+    x = ad.Scalar('x', 2)
+    y = ad.Scalar('y', 3)
+    z = (x + y) / y
+    d = z.getGradient(['x', 'y'])
+    assert(np.isclose(z.getValue(), 5/3))
+    assert(np.allclose(d, [1.0/3, -2.0/9]))
+
+    x = ad.Scalar('x', 2)
+    y = ad.Scalar('y', 3)
+    z = x + ((y ** 2) / y)
+    d = z.getGradient(['x', 'y'])
+    assert(z.getValue() == 5)
+    assert(np.array_equal(d, [1, 1]))
+
+    x = ad.Scalar('x', 2)
+    y = ad.Scalar('y', 3)
+    z = (x ** y) ** 2
+    d = z.getGradient(['x', 'y'])
+    assert(z.getValue() == 64)
+    assert(np.array_equal(d, [6 * 32, 2 * np.log(2) * 64]))        
+
+
+
+    
+    
