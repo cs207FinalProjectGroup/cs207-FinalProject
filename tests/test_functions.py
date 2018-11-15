@@ -82,6 +82,15 @@ def test_sqrt():
     assert(sqrt_six == np.sqrt(6.5) );
     
     #test that sqrt throws error for negative value
-#    with pytest.raises(TypeError):
+    with pytest.raises(TypeError):
+        ad.sqrt(-1);
+        
+    #test that proper error is thrown for sqrt of Scalar=0
+    with pytest.raises(ZeroDivisionError):    
+        z = ad.Scalar('z', 0);
+        z_sqrt = ad.sqrt(z);
+   
+    #test that sqrt function works with integer 0
+    assert(ad.sqrt(0) == np.sqrt(0) ); #4**(0.5) = 2
         
 
