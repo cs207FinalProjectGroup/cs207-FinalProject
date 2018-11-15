@@ -61,5 +61,26 @@ def test_exp():
 
 
 def test_power():
-    assert(ad.power(5, 3) == 125.0)
+    assert(ad.power(5, 3) == 125.0);
+    
+def test_sqrt():
+    #basic test for sqrt function
+    b = ad.Scalar('b', 4);
+    b_sqrt = ad.sqrt(b);
+    assert(b_sqrt.getValue() == 2.0); #4**(0.5) = 2
+    assert(b_sqrt.getDeriv() == 0.5*(1/np.sqrt(4)) );
+    
+    #harder test for sqrt function
+    c = ad.Scalar('c', 11.27);
+    c_sqrt = ad.sqrt(c);
+    assert(c_sqrt.getValue() == np.sqrt(11.27)); #4**(0.5) = 2
+    assert(c_sqrt.getDeriv() == 0.5*(1/np.sqrt(11.27)) );
+    
+    #test that sqrt works with ints/floats
+    sqrt_six = ad.sqrt(6.5);
+    assert(sqrt_six == np.sqrt(6.5) );
+    
+    #test that sqrt throws error for negative value
+#    with pytest.raises(TypeError):
+        
 
