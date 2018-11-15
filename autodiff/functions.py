@@ -5,7 +5,7 @@ import numpy as np
 from autodiff.scalar import Scalar
 
 def sin(sclr):
-    '''
+    """
     This function takes in an int, float, or Scalar object and applies the sine function to the value. If the argument is an int or float, then the function returns a float. If the argument is a Scalar object, the function returns a new Scalar object with the updated value and derivative.
     
     INPUTS
@@ -34,7 +34,7 @@ def sin(sclr):
     >>> y = 2
     >>> np.isclose(sin(y), 0.9092974268256817)
     True
-    '''
+    """
     try:
         result = Scalar(None, np.sin(sclr._val) ); #create new Scalar object with updated value
         result._deriv = sclr._deriv.copy(); #result's derivative map is a copy of the passed in Scalar
@@ -172,7 +172,7 @@ def power(x, y):
         return x**y;
     else:
         return float(x**y); #dealing with an ints/floats
-    
+
 def exp(sclr):
     """This function takes in an int, float, or Scalar object. If an int/float provided, then the function returns a float of value equal to raising 'e' to the power of 'x'. If a Scalar object is provided, the function returns a Scalar object representing the operation e^(sclr), where 'sclr' is the current Scalar object. Calculations of new Scalar's derivatives follow the power rule of differentiation.
 
@@ -213,4 +213,37 @@ def exp(sclr):
         return result;
     except AttributeError: #dealing with an int/float
         return np.exp(sclr);
-    
+
+
+def sqrt(sclr):
+    """
+    Returns the square root of an int, float, ot Scalar objects.
+
+    INPUTS
+    =======
+    sclr: int or float or Scalar object
+    The constant/Scalar that we take the square root of.
+
+    RETURNS
+    ========
+    float, Scalar
+    A float is returned if both input is an int or float.
+    Returns a Scalar object otherwise.
+
+    NOTES
+    =====
+    POST:
+        - 'sclr' is not changed by the function
+
+    EXAMPLES
+    =========
+    >>> a = Scalar('a', 4)
+    >>> b = sqrt(a)
+    >>> b._val
+    2.0
+    >>> b._deriv['a']
+    0.25
+    >>> sqrt(9)
+    3.0
+    """
+    return power(sclr, .5)
