@@ -62,4 +62,4 @@ def test_exp():
 
 def test_power():
     assert(ad.power(5, 3) == 125.0)
-
+    
