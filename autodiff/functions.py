@@ -30,7 +30,7 @@ def get_deriv(sclr):
 
 @vectorize
 def sin(sclr):
-    '''
+    """
     This function takes in an int, float, or Scalar object and applies the sine function to the value. If the argument is an int or float, then the function returns a float. If the argument is a Scalar object, the function returns a new Scalar object with the updated value and derivative.
     
     INPUTS
@@ -59,7 +59,7 @@ def sin(sclr):
     >>> y = 2
     >>> np.isclose(sin(y), 0.9092974268256817)
     True
-    '''
+    """
     try:
         result = Scalar(None, np.sin(sclr._val) ); #create new Scalar object with updated value
         result._deriv = sclr._deriv.copy(); #result's derivative map is a copy of the passed in Scalar
