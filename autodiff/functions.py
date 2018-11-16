@@ -19,6 +19,16 @@ def vectorize(foo):
 
 
 @vectorize
+def get_value(sclr):
+    return sclr.getValue()
+
+
+@vectorize
+def get_deriv(sclr):
+    return sclr.getDeriv()
+
+
+@vectorize
 def sin(sclr):
     '''
     This function takes in an int, float, or Scalar object and applies the sine function to the value. If the argument is an int or float, then the function returns a float. If the argument is a Scalar object, the function returns a new Scalar object with the updated value and derivative.
