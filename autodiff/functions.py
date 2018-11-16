@@ -4,6 +4,21 @@
 import numpy as np
 from autodiff.scalar import Scalar
 
+
+def vectorize(foo):
+    """
+    Decorator to handle vectors as inputs of our functions.
+    Vectors are arrays of scalars.
+    """
+    def inner(*args, **kwargs):
+        for arg in list(args) + list(kwargs.values()):
+            if isinstance(arg, np.ndarray):
+                return np.vectorize(foo)(*args, **kwargs)
+        return foo(*args, **kwargs)
+    return inner
+
+
+@vectorize
 def sin(sclr):
     '''
     This function takes in an int, float, or Scalar object and applies the sine function to the value. If the argument is an int or float, then the function returns a float. If the argument is a Scalar object, the function returns a new Scalar object with the updated value and derivative.
@@ -47,6 +62,7 @@ def sin(sclr):
         return np.sin(sclr);
         
 
+@vectorize
 def cos(sclr):
     '''
     This function takes in an int, float, or Scalar object and applies the cosine function to the value. If the argument is an int or float, then the function returns a float. If the argument is a Scalar object, the function returns a new Scalar object with the updated value and derivative.
@@ -90,6 +106,7 @@ def cos(sclr):
         return np.cos(sclr);
 
 
+@vectorize
 def tan(sclr):
     '''
     This function takes in an int, float, or Scalar object and applies the tangent function to the value. If the argument is an int or float, then the function returns a float. If the argument is a Scalar object, the function returns a new Scalar object with the updated value and derivative.
@@ -125,6 +142,7 @@ def tan(sclr):
     return sin(sclr) / cos(sclr);
 
 
+@vectorize
 def power(x, y):
     """
     This function takes in any combination of ints, floats, and Scalar objects. If only ints and floats are provided, then the function returns a float of value equal to raising 'x' to the power of 'y'. If at least one Scalar object is provided, the function returns a Scalar object representing the operation x ** y, where 'x' and 'y' can be a combination of an int/float and a Scalar object or two Scalar objects. Calculation of new Scalar's derivatives follow the rules for exponents and power rule of differentiation respectively. 
@@ -173,6 +191,7 @@ def power(x, y):
     else:
         return float(x**y); #dealing with an ints/floats
 
+@vectorize
 def exp(sclr):
     """This function takes in an int, float, or Scalar object. If an int/float provided, then the function returns a float of value equal to raising 'e' to the power of 'x'. If a Scalar object is provided, the function returns a Scalar object representing the operation e^(sclr), where 'sclr' is the current Scalar object. Calculations of new Scalar's derivatives follow the power rule of differentiation.
 
@@ -215,6 +234,7 @@ def exp(sclr):
         return np.exp(sclr);
 
 
+@vectorize
 def sqrt(sclr):
     """
     Returns the square root of an int, float, ot Scalar objects.
