@@ -162,6 +162,16 @@ def test_rpow():
     val = 1.0**x
     assert(val.getValue()==1)
     assert(np.isclose(val._deriv['x'], 0.0)==True)
+    
+    #test that 0**-1 is a ZeroDivisionError
+    with pytest.raises(ZeroDivisionError):    
+        z = ad.Scalar('z', -1);
+        0**z
+    
+    #test that 0**0 is a ZeroDivisionError
+    with pytest.raises(ZeroDivisionError):    
+        x = ad.Scalar('x', 0);
+        0**x
 
 
 def test_truediv():
