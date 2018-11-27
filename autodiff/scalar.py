@@ -344,10 +344,22 @@ class Scalar():
         >>> np.isclose(y._deriv['x'], 4 * np.log(2))
         True
         """
+        b_is_zero = False; #flag to set if 'b' is zero, so derivative can be calculated appropriately
+        #handle case if 'b'=0
+        if b == 0:
+            if self._val < 1: #self.
+                raise ZeroDivisionError;
+            else: #set flag to True
+                b_is_zero = True;
+                
         powered = Scalar(None, b ** self._val);
         powered._deriv.pop(None, None); #get rid of None in the dictionary
         for variable in self._deriv.keys():
-            powered._deriv[variable] = (b ** self._val) * np.log(b) * self._deriv[variable];
+            if b_is_zero: #if 'b' is zero, all derivatives should also be zero
+                powered._deriv[variable] = 0;
+            else:
+                powered._deriv[variable] = (b ** self._val) * np.log(b) * self._deriv[variable];
+                
         return powered;
     
 

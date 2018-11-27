@@ -163,6 +163,12 @@ def test_rpow():
     assert(val.getValue()==1)
     assert(np.isclose(val._deriv['x'], 0.0)==True)
     
+    #test that 0**2 returns value=0 and derive=0
+    x=ad.Scalar('x', 2)
+    val = 0**x
+    assert(val.getValue()==0)
+    assert(np.isclose(val._deriv['x'], 0.0)==True)
+    
     #test that 0**-1 is a ZeroDivisionError
     with pytest.raises(ZeroDivisionError):    
         z = ad.Scalar('z', -1);
