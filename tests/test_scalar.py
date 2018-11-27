@@ -472,7 +472,7 @@ def test_get_gradients():
     
     
 def test_composite():
-
+    #Test assortment of composite operations.
     x = ad.Scalar('x', 2)
     z = (5 * (x + 20)  / 10) ** 2
     d = z.getGradient(['x'])
