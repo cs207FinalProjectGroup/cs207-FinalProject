@@ -128,6 +128,12 @@ def test_composite():
     assert(z.getDeriv()['y'] == 16/2 * (16 * 9)**(-0.5))
 
 
+    x = ad.Scalar('x', 3)
+    y = ad.Scalar('y', 2)
+    z = ad.cos(ad.sin(x * y))
+    assert(z.getValue() == np.cos(np.sin(6)))
+    assert(z.getDeriv()['x'] == -2 * np.cos(6) * np.sin(np.sin(6)))
+    assert(z.getDeriv()['y'] == -3 * np.cos(6) * np.sin(np.sin(6)))
 
 
 
