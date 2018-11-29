@@ -40,3 +40,31 @@ def create_vector(vector_name, values):
 
     return np.array([Scalar("%s%i" % (vector_name, i), value)
                      for i, value in enumerate(values, 1)])
+
+
+def get_jacobian(vector, variables):
+    """
+    Returns the jacobian of the vector w.r.t. the variables passed in.
+
+    INPUTS
+    =======
+    variables: list
+    A list of strings corresponding to the variable names.
+
+    RETURNS
+    ========
+    jacobian: numpy array
+    The numpy array that represents the jacobian of the vector w.r.t.
+    the variables.
+
+    EXAMPLES
+    =========
+    >>> x = create_vector('x', [1, 2, 3])
+    >>> y = create_vector('y', [5, 8, -7])
+    >>> z = x - y
+    >>> jacobian = get_jacobian(z, ['x1', 'y2', 't'])
+    >>> np.array_equal(jacobian, np.array([[1.,0.,0.],[0.,-1.,0.],[0.,0.,0.]]))
+    True
+    """
+
+    return np.array([sclr.getGradient(variables) for sclr in vector])
