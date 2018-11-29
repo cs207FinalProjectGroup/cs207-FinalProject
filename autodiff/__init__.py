@@ -1,3 +1,3 @@
 from autodiff.scalar import Scalar
 from autodiff.functions import *
-from autodiff.vector import create_vector
+from autodiff.vector import *
