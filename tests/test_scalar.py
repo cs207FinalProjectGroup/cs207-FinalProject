@@ -122,6 +122,14 @@ def test_pow():
     val = x**2
     assert(val.getValue()==1.0)
     assert(val.getDeriv()['x']==2.0)
+    
+    #make sure Scalar**Scalar is right
+    x = ad.Scalar('x', 4);
+    z = ad.Scalar('z', 2.3);
+    val = x**z;
+    assert(np.isclose(val.getValue(), 4**2.3) );
+    assert(np.isclose(val.getDeriv()['x'], 2.3*(4**1.3)) );
+    assert(np.isclose(val.getDeriv()['z'], np.log(4)*4**2.3));
 
     x=ad.Scalar('x', 0)
     val = x**2
@@ -133,6 +141,11 @@ def test_pow():
         x ** 0.8
     with pytest.raises(ZeroDivisionError):
         x ** -0.1
+    
+    #z = ad.Scalar('z', 0.3);
+    #with pytest.raises(ZeroDivisionError):
+    #   x ** z
+    
     y = x ** 3.5
     assert(y.getValue() == 0)
     assert(y.getDeriv()['x'] == 0)
