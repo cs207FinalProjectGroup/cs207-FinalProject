@@ -25,6 +25,9 @@ def test_sin():
 
     assert (np.isclose(val.getValue(),0.0)==True)
     assert (np.isclose(val.getDeriv()['x'],1.0)==True)
+
+    assert (ad.sin(0) == 0)
+    assert (ad.sin(13443) == np.sin(13443))
     
 def test_cos():
     
@@ -46,6 +49,9 @@ def test_cos():
     assert (np.isclose(val.getValue(),1.0)==True)
     assert (np.isclose(val.getDeriv()['x'],0.0)==True)
 
+    assert (ad.cos(0) == 1)
+    assert (ad.cos(13443) == np.cos(13443))
+
 
 def test_exp():
     x = ad.Scalar('x', 8)
@@ -58,6 +64,30 @@ def test_exp():
     y = ad.exp(x)
     assert(np.isclose(y.getValue(), np.exp(-3)))
     assert(np.isclose(y.getDeriv()['x'], -2.3 * np.exp(-3)))
+
+    assert (ad.exp(0) == 1)
+    assert (ad.exp(13443) == np.exp(13443))
+
+    x = ad.Scalar('x', -3)
+    y = ad.Scalar('y', 5)
+    z = ad.exp(x) * ad.exp(y)
+    assert(np.isclose(z.getValue(), np.exp(2)))
+    assert(np.isclose(z.getDeriv()['x'],  np.exp(2)))
+    assert(np.isclose(z.getDeriv()['y'],  np.exp(2)))
+
+    x = ad.Scalar('x', -3)
+    y = ad.Scalar('y', 5)
+    z = ad.exp(x + y)
+    assert(np.isclose(z.getValue(), np.exp(2)))
+    assert(np.isclose(z.getDeriv()['x'],  np.exp(2)))
+    assert(np.isclose(z.getDeriv()['y'],  np.exp(2)))
+
+    x = ad.Scalar('x', -3)
+    y = ad.Scalar('y', 5)
+    z = ad.exp(x * y)
+    assert(np.isclose(z.getValue(), np.exp(-15)))
+    assert(np.isclose(z.getDeriv()['x'],  5 * np.exp(-15)))
+    assert(np.isclose(z.getDeriv()['y'],  -3 * np.exp(-15)))
 
 
 def test_power():
@@ -99,15 +129,14 @@ def test_composite():
 
     x = ad.Scalar('x', 16)
     y = ad.sin(ad.sqrt(x))
-    assert(y.getValue() == np.sin(4))
-    assert(y.getDeriv()['x'] == 1/8 * np.cos(4))
+    assert(np.isclose(y.getValue(), np.sin(4)))
+    assert(np.isclose(y.getDeriv()['x'], 1/8 * np.cos(4)))
 
     #trig identity
     x = ad.Scalar('x', 5)
     y = ad.sin(x) ** 2 + ad.cos(x) ** 2
-    assert(y.getValue() == 1)
-    assert(y.getDeriv()['x'] == 0)
-
+    assert(np.isclose(y.getValue(), 1))
+    assert(np.isclose(y.getDeriv()['x'], 0))
 
     x = ad.Scalar('x', 16)
     y = ad.sqrt(ad.power(x, 2))
@@ -116,24 +145,32 @@ def test_composite():
 
     x = ad.Scalar('x', 10)
     y = ad.tan(x) * ad.cos(x) / ad.sin(x)
-    assert(y.getValue() == 1)
+    assert(np.isclose(y.getValue(), 1))
     assert(np.isclose(y.getDeriv()['x'], 0))
-
 
     x = ad.Scalar('x', 16)
     y = ad.Scalar('y', 9)
     z = ad.sqrt(x * y)
     assert(z.getValue() == 12)
-    assert(z.getDeriv()['x'] == 9/2 * (16 * 9)**(-0.5))
-    assert(z.getDeriv()['y'] == 16/2 * (16 * 9)**(-0.5))
-
+    assert(np.isclose(z.getDeriv()['x'], 9/2 * (16 * 9)**(-0.5)))
+    assert(np.isclose(z.getDeriv()['y'],  16/2 * (16 * 9)**(-0.5)))
 
     x = ad.Scalar('x', 3)
     y = ad.Scalar('y', 2)
     z = ad.cos(ad.sin(x * y))
-    assert(z.getValue() == np.cos(np.sin(6)))
-    assert(z.getDeriv()['x'] == -2 * np.cos(6) * np.sin(np.sin(6)))
-    assert(z.getDeriv()['y'] == -3 * np.cos(6) * np.sin(np.sin(6)))
+    assert(np.isclose(z.getValue(), np.cos(np.sin(6))))
+    assert(np.isclose(z.getDeriv()['x'],  -2 * np.cos(6) * np.sin(np.sin(6))))
+    assert(np.isclose(z.getDeriv()['y'], -3 * np.cos(6) * np.sin(np.sin(6))))
+
+    x = ad.Scalar('x', 3)
+    y = ad.Scalar('y', 2)
+    z = ad.sin(x) * ad.cos(y)
+    assert(np.isclose(z.getValue(), np.sin(3) * np.cos(2)))
+    assert(np.isclose(z.getDeriv()['x'], np.cos(3) * np.cos(2)))
+    assert(np.isclose(z.getDeriv()['y'], -np.sin(3) * np.sin(2)))
+
+
+
 
 
 
