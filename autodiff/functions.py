@@ -4,7 +4,6 @@
 import numpy as np
 from autodiff.scalar import Scalar
 
-
 def vectorize(foo):
     """
     Decorator to handle vectors as inputs of our functions.
@@ -20,11 +19,19 @@ def vectorize(foo):
 
 @vectorize
 def get_value(sclr):
+    """
+    Refer to getValue's docstring in Scalar class.
+    Returns an array of values if called on a vector.
+    """
     return sclr.getValue()
 
 
 @vectorize
 def get_deriv(sclr):
+    """
+    Refer to getDeriv's docstring in Scalar class.
+    Returns an array of dictionaries if called on a vector.
+    """
     return sclr.getDeriv()
 
 
