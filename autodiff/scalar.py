@@ -294,7 +294,7 @@ class Scalar():
                 else:
                     powered._deriv[variable] = (self._val ** b._val) * (np.log(self._val) + b._val / (self._val)) * self._deriv[variable] 
             
-        except AttributeError:
+        except AttributeError: #b is just a integer or float value
             new_val = self._val ** b;
             #check that a negative number is not being raised to a decimal. Python returns a complex number if this occurs.
             if np.iscomplex(new_val):
