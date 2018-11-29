@@ -142,10 +142,6 @@ def test_pow():
     with pytest.raises(ZeroDivisionError):
         x ** -0.1
     
-    #z = ad.Scalar('z', 0.3);
-    #with pytest.raises(ZeroDivisionError):
-    #   x ** z
-    
     y = x ** 3.5
     assert(y.getValue() == 0)
     assert(y.getDeriv()['x'] == 0)
