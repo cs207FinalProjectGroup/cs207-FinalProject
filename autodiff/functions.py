@@ -81,7 +81,7 @@ def sin(sclr):
 
 @vectorize
 def cos(sclr):
-    '''
+    """
     This function takes in an int, float, or Scalar object and applies the cosine function to the value. If the argument is an int or float, then the function returns a float. If the argument is a Scalar object, the function returns a new Scalar object with the updated value and derivative.
     
     INPUTS
@@ -110,7 +110,7 @@ def cos(sclr):
     >>> y = 2
     >>> np.isclose(cos(y), -0.4161468365471424)
     True
-    '''
+    """
     try:
         result = Scalar(None, np.cos(sclr._val) ); #create new Scalar object with updated value
         result._deriv = sclr._deriv.copy(); #result's derivative map is a copy of the passed in Scalar
@@ -125,7 +125,7 @@ def cos(sclr):
 
 @vectorize
 def tan(sclr):
-    '''
+    """
     This function takes in an int, float, or Scalar object and applies the tangent function to the value. If the argument is an int or float, then the function returns a float. If the argument is a Scalar object, the function returns a new Scalar object with the updated value and derivative.
     
     INPUTS
@@ -154,8 +154,7 @@ def tan(sclr):
     >>> y = 2
     >>> np.isclose(tan(y), -2.185039863261519)
     True
-    '''
-    #return sin(Scalar) / cos(Scalar) since these functions are already implemented
+    """
     return sin(sclr) / cos(sclr);
 
 
@@ -284,3 +283,127 @@ def sqrt(sclr):
     3.0
     """
     return power(sclr, .5)
+
+@vectorize
+def sinh(sclr):
+    """
+    This function takes in an int, float, or Scalar object and applies the hyperbolic sine function to the value. If the argument is an int or float, then the function returns a float. If the argument is a Scalar object, the function returns a new Scalar object with the updated value and derivative.
+    INPUTS
+    =======
+    sclr: An int, float, or Scalar object on which the hyperbolic sine function will applied.
+    RETURNS
+    ========
+    float, Scalar
+    A float is returned if the input is an int/float. A new Scalar object, resulting from applying the hyperbolic sine function to  'sclr', is returned if the input is a Scalar object .
+    NOTES
+    =====
+    POST:
+        - 'sclr' is not changed by the function
+        - returns a float or Scalar object, resulting from applying the hyperbolic sine function to  'sclr'.
+    """
+    try:
+        result = Scalar(None, np.sinh(sclr._val));  # create new Scalar object with updated value
+        result._deriv = sclr._deriv.copy();  # result's derivative map is a copy of the passed in Scalar
+        # update derivatives for all of the variables in result by applying cosh(deriv)
+        for key in result._deriv.keys():
+            d = result._deriv[key];
+            result._deriv[key] = np.cosh(sclr._val) * d;
+        return result;
+    except AttributeError:  # dealing with an int/float
+        return np.sinh(sclr);
+
+@vectorize
+def cosh(sclr):
+    """
+    This function takes in an int, float, or Scalar object and applies the hyperbolic cosine function to the value. If the argument is an int or float, then the function returns a float. If the argument is a Scalar object, the function returns a new Scalar object with the updated value and derivative.
+    INPUTS
+    =======
+    sclr: An int, float, or Scalar object on which the hyperbolic cosine function will applied.
+    RETURNS
+    ========
+    float, Scalar
+    A float is returned if the input is an int/float. A new Scalar object, resulting from applying the hyperbolic cosine function to  'sclr', is returned if the input is a Scalar object .
+    NOTES
+    =====
+    POST:
+        - 'sclr' is not changed by the function
+        - returns a float or Scalar object, resulting from applying the hyperbolic cosine function to  'sclr'.
+    """
+    try:
+        result = Scalar(None, np.cosh(sclr._val));  # create new Scalar object with updated value
+        result._deriv = sclr._deriv.copy();  # result's derivative map is a copy of the passed in Scalar
+        # update derivatives for all of the variables in result by applying -sin(deriv)
+        for key in result._deriv.keys():
+            d = result._deriv[key];
+            result._deriv[key] = np.sinh(sclr._val) * d;
+        return result;
+    except AttributeError:  # dealing with an int/float
+        return np.cosh(sclr);
+
+@vectorize
+def tanh(sclr):
+    """
+    This function takes in an int, float, or Scalar object and applies the hyperbolic tangent function to the value. If the argument is an int or float, then the function returns a float. If the argument is a Scalar object, the function returns a new Scalar object with the updated value and derivative.
+    INPUTS
+    =======
+    sclr: An int, float, or Scalar object on which the hyperbolic tangent function will applied.
+    RETURNS
+    ========
+    float, Scalar
+    A float is returned if the input is an int/float. A new Scalar object, resulting from applying the hyperbolic tangent function to  'sclr', is returned if the input is a Scalar object .
+    NOTES
+    =====
+    POST:
+        - 'sclr' is not changed by the function
+        - returns a float or Scalar object, resulting from applying the hyperbolic tangent function to  'sclr'.
+    """
+    return sinh(sclr) / cosh(sclr);
+
+@vectorize
+def log(sclr, base):
+    """
+    This function takes in an int, float, or Scalar object and applies the log with base to the value. If the argument is an int or float, then the function returns a float. If the argument is a Scalar object, the function returns a new Scalar object with the updated value and derivative.
+    INPUTS
+    =======
+    sclr: An int, float, or Scalar object on which the log with base function will applied.
+    base: An int or float representing the base
+    RETURNS
+    ========
+    float, Scalar
+    A float is returned if the input is an int/float. A new Scalar object, resulting from applying the log with base function to 'sclr', is returned if the input is a Scalar object .
+    NOTES
+    =====
+    POST:
+        - 'sclr' is not changed by the function
+        - returns a float or Scalar object, resulting from applying the log with base function to 'sclr'.
+    """
+
+    try:
+        result = Scalar(None, np.log(sclr._val) / np.log(base));  # create new Scalar object with updated value
+        result._deriv = sclr._deriv.copy();  # result's derivative map is a copy of the passed in Scalar
+        # update derivatives for all of the variables in result by applying -sin(deriv)
+        for key in result._deriv.keys():
+            d = result._deriv[key];
+            result._deriv[key] = d / (np.log(base) * sclr._val);
+        return result;
+    except AttributeError:  # dealing with an int/float
+        return np.log(sclr) / np.log(base);
+
+@vectorize
+def ln(sclr):
+    """
+    This function takes in an int, float, or Scalar object and applies the natural log to the value. If the argument is an int or float, then the function returns a float. If the argument is a Scalar object, the function returns a new Scalar object with the updated value and derivative.
+    INPUTS
+    =======
+    sclr: An int, float, or Scalar object on which the natural log function will applied.
+    RETURNS
+    ========
+    float, Scalar
+    A float is returned if the input is an int/float. A new Scalar object, resulting from applying the natural log function to 'sclr', is returned if the input is a Scalar object .
+    NOTES
+    =====
+    POST:
+        - 'sclr' is not changed by the function
+        - returns a float or Scalar object, resulting from applying the natural log function to  'sclr'.
+    """
+    return log(sclr, np.e)

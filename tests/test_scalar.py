@@ -497,8 +497,51 @@ def test_get_gradients():
     y = -2 * x
     d = y.getGradient(['x', 'z'])
     assert(np.array_equal(d, [-2, 0]))
+
+def test_equal():
+    x = ad.Scalar('x', 1)
+    x2 = ad.Scalar('x', 1)
+    assert(x == x2)
+    assert(not (x != x2))
+
+    x = ad.Scalar('x', 1)
+    assert(x != 1)
+    assert(not (x == 1))
+
+    x = ad.Scalar('x', 1)
+    x2 = ad.Scalar('x', 1.0)   
+    assert(x == x2)
+    assert(not (x != x2)) 
     
-    
+    x = ad.Scalar('x', 1)
+    x2 = ad.Scalar('y', 1.0)   
+    assert(x != x2)
+    assert(not (x == x2)) 
+
+    x = ad.Scalar('x', 1)
+    x2 = ad.Scalar('x', 2.0)   
+    assert(x != x2)
+    assert(not (x == x2)) 
+
+    x = ad.Scalar('x', 1)
+    x2 = ad.Scalar('x', 1.0)
+    assert(x + x2 == 2 * x)
+    assert(not (x + x2 != 2 * x))
+
+    x = ad.Scalar('x', 1)
+    x2 = ad.Scalar('x', 1.0)
+    assert(x + x2 == x2 + x)
+    assert(not (x + x2 != x2 + x))
+
+    x = ad.Scalar('x', 1)
+    x2 = ad.Scalar('y', 1.0)   
+    assert(x + x2 == x2 + x)
+    assert(not (x + x2 != x2 + x))
+    assert(x * x2 == x2 * x)
+    assert(not (x * x2 != x2 * x))
+
+
+
 def test_composite():
     #Test assortment of composite operations.
     x = ad.Scalar('x', 2)

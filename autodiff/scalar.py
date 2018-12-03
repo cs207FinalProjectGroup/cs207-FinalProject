@@ -450,6 +450,16 @@ class Scalar():
         self._deriv = result._deriv; #reassign the value of deriv
         return self;
     
+    def __eq__(self, b):
+        """Check if two Scalar objects are equal"""
+        try:
+            return self._val == b._val and self._deriv == b._deriv;
+        except AttributeError:
+            return False
+
+    def __ne__(self, b):
+        """ Check if two Scalar objects are not equal"""
+        return not (self == b)
 
     def getValue(self):
         """Returns the value of the scalar so that users does not access the value directly and potentially change it."""
