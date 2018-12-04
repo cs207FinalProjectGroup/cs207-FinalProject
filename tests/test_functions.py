@@ -253,5 +253,13 @@ def test_log():
     assert(np.isclose(ad.log(100, 10), 2) == True)
 
 
+def test_arcsine():
+    x = ad.Scalar('x', 0.5);
+    y = ad.arcsin(x);
+    assert(np.isclose(y.getValue(), np.arcsin(0.5)) );
+    assert(np.isclose(y.getDeriv()['x'], 1 / np.sqrt(1-0.5**2)));
+    
+    y = ad.arcsin(-0.1);
+    assert(np.isclose(y, np.arcsin(-0.1)) );
 
 
