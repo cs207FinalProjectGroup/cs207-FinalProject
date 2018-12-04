@@ -267,7 +267,17 @@ def test_arccos():
     x = ad.Scalar('x', 0.5);
     y = ad.arccos(x);
     assert(np.isclose(y.getValue(), np.arccos(0.5)) );
-    assert(np.isclose(y.getDeriv()['x'], 1 / np.sqrt(1-0.5**2)));
+    assert(np.isclose(y.getDeriv()['x'], -1 / np.sqrt(1-0.5**2)));
     
     y = ad.arccos(-0.1);
     assert(np.isclose(y, np.arccos(-0.1)) );
+    
+
+def test_arctan():
+    x = ad.Scalar('x', 0.5);
+    y = ad.arctan(x);
+    assert(np.isclose(y.getValue(), np.arctan(0.5)) );
+    assert(np.isclose(y.getDeriv()['x'], 1 / (1+0.5**2)));
+    
+    y = ad.arctan(-0.1);
+    assert(np.isclose(y, np.arctan(-0.1)) );
