@@ -313,7 +313,37 @@ def arcsin(sclr):
     except AttributeError:  # dealing with an int/float
         return np.arcsin(sclr);
     
+
+@vectorize
+def arccos(sclr):
+    """
+    This function takes in an int, float, or Scalar object and applies the arcsine function to the value. If the argument is an int or float, then the function returns a float. If the argument is a Scalar object, the function returns a new Scalar object with the updated value and derivative.
+    INPUTS
+    =======
+    sclr: An int, float, or Scalar object on which the arcsine function will applied.
+    RETURNS
+    ========
+    float, Scalar
+    A float is returned if the input is an int/float. A new Scalar object, resulting from applying the arcsine function to  'sclr', is returned if the input is a Scalar object.
     
+    NOTES
+    =====
+    POST:
+        - 'sclr' is not changed by the function
+        - returns a float or Scalar object, resulting from applying the arcsine function to  'sclr'.
+    """
+    try:
+        result = Scalar(None, np.arccos(sclr._val));  # create new Scalar object with updated value
+        result._deriv = sclr._deriv.copy();  # result's derivative map is a copy of the passed in Scalar
+        # update derivatives for all of the variables in result by applying deriv * 1/(1-x**2)**0.5
+        for key in result._deriv.keys():
+            d = result._deriv[key];
+            result._deriv[key] = 1/np.sqrt(1 - sclr._val**2) * d;
+        return result;
+    except AttributeError:  # dealing with an int/float
+        return np.arccos(sclr);    
+
+
 @vectorize
 def sinh(sclr):
     """
