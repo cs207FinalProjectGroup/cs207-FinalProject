@@ -125,6 +125,32 @@ def test_exp():
     assert(np.isclose(z.getDeriv()['x'],  5 * np.exp(-15)))
     assert(np.isclose(z.getDeriv()['y'],  -3 * np.exp(-15)))
 
+def test_logistic():
+    x = ad.Scalar('x', 8)
+    y = ad.logistic(x)
+    assert(np.isclose(y.getValue(), 1 / (1 + np.exp(-8))))
+    assert(np.isclose(y.getDeriv()['x'], (1 / (1 + np.exp(-8))) * (1 - 1 / (1 + np.exp(-8)))))
+
+    x = ad.Scalar('x', 0)
+    y = ad.logistic(x)
+    assert(np.isclose(y.getValue(), 0.5))
+    assert(np.isclose(y.getDeriv()['x'], (0.25)))   
+
+    x = ad.Scalar('x', 5)
+    y = ad.Scalar('y', 2)
+    z = ad.logistic(x * y)
+    assert(np.isclose(z.getValue(), 1 / (1 + np.exp(-10))))
+    assert(np.isclose(z.getDeriv()['x'], 2  * (1 / (1 + np.exp(-10))) * (1 - 1 / (1 + np.exp(-10)))))   
+    assert(np.isclose(z.getDeriv()['y'], 5  * (1 / (1 + np.exp(-10))) * (1 - 1 / (1 + np.exp(-10)))))   
+
+    x = ad.Scalar('x', 8)
+    y = ad.logistic(2 * x)
+    assert(np.isclose(y.getValue(), 1 / (1 + np.exp(-16))))
+    assert(np.isclose(y.getDeriv()['x'], 2  * (1 / (1 + np.exp(-16))) * (1 - 1 / (1 + np.exp(-16)))))
+
+    assert(np.isclose(ad.logistic(0), 0.5))
+
+
 
 def test_power():
     assert(ad.power(5, 3) == 125.0)

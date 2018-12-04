@@ -359,6 +359,28 @@ def tanh(sclr):
     """
     return sinh(sclr) / cosh(sclr);
 
+
+@vectorize
+def logistic(sclr):
+    """
+    This function takes in an int, float, or Scalar object and applies the logistic function to the value. If the argument is an int or float, then the function returns a float. If the argument is a Scalar object, the function returns a new Scalar object with the updated value and derivative.
+    INPUTS
+    =======
+    sclr: An int, float, or Scalar object on which the the logistic function will be applied.
+    RETURNS
+    ========
+    float, Scalar
+    A float is returned if the input is an int/float. A new Scalar object, resulting from applying the logistic function to 'sclr', is returned if the input is a Scalar object .
+    NOTES
+    =====
+    POST:
+        - 'sclr' is not changed by the function
+        - returns a float or Scalar object, resulting from applying the logistic function to 'sclr'.
+    """
+
+    return 1 / (1 + exp(-sclr))
+
+
 @vectorize
 def log(sclr, base):
     """
