@@ -2,7 +2,7 @@ import numpy as np
 from autodiff.scalar import Scalar
 
 
-def create_vector(vector_name, values):
+def create_vector(vector_name, values, seed_vector = None):
     """
     Returns an array of Scalar containing the values
     with names derived from vector_name.
@@ -37,9 +37,14 @@ def create_vector(vector_name, values):
     >>> w[1].getDeriv()['w2']
     1.0
     """
-
-    return np.array([Scalar("%s%i" % (vector_name, i), value)
-                     for i, value in enumerate(values, 1)])
+    if seed_vector is None:
+        return np.array([Scalar("%s%i" % (vector_name, i), value)
+                         for i, value in enumerate(values, 1)])
+    else:
+        if len(values) != len(seed_vector):
+            raise Exception("Values not the same length as seed vector!")
+        return np.array([Scalar("%s%i" % (vector_name, i), value, seed_vector[i - 1])
+                         for i, value in enumerate(values, 1)])
 
 
 def get_jacobian(vector, variables):

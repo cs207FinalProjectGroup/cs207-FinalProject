@@ -6,7 +6,7 @@ class Scalar():
     Object that represents a scalar variable. 
     """
 
-    def __init__(self, variable, val):  
+    def __init__(self, variable, val, deriv = 1):  
         """The Scalar object contains two attributes, _val and _deriv, where the former is the value of the Scalar and the latter the derivatives.
         When a new Scalar is initialized. A user sets the name and value of the scalar during initialization. 
     
@@ -19,7 +19,7 @@ class Scalar():
         The value of the Scalar
         """
         self._val = float(val) #ensures _val is numeric
-        self._deriv = {variable: 1.0}
+        self._deriv = {variable: float(deriv)}
         
     def __str__(self):
         """String representation of the Scalar object. Tells both the value and the derivatives."""
