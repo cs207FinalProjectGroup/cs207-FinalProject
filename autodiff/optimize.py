@@ -1,6 +1,5 @@
 import autodiff as ad
 import numpy as np
-import scipy 
 from scipy.sparse.linalg import gmres
 from scipy.sparse.linalg import LinearOperator
 
