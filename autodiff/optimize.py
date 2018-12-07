@@ -31,7 +31,7 @@ def gradient_descent(f, intial_guess, step_size = 0.01, max_iter = 10000, tol = 
     A tuple with first entry which maps to the position of the minimum and second entry which maps to the number of iterations it took for the algorithm to stop
     """
 
-    x = np.array(x_init)
+    x = np.array(intial_guess)
     for i in range(max_iter):
         x_vector = ad.create_vector('x', x)
         fn_at_x = f(*x_vector)
@@ -83,8 +83,8 @@ def line_search(f, x, p, tau = 0.1, c = 0.1, alpha = 1):
     return alpha
         
 
-def quasi_newton(f, initial_guess, max_iter = 10000, method = 'BFGS', tol = 1e-12):
-    """
+def quasi_newtons_method(f, initial_guess, max_iter = 10000, method = 'BFGS', tol = 1e-12):
+    """p
     Implements Quasi-Newton method with different update methods of the estimate of the inverse of the Hessian.
     Utilizes backtracking line search to determine step size.     
     https://en.wikipedia.org/wiki/Quasi-Newton_method
@@ -115,7 +115,7 @@ def quasi_newton(f, initial_guess, max_iter = 10000, method = 'BFGS', tol = 1e-1
     
     if method not in ['BFGS', 'DFP', 'Broyden', 'SR1']:
             raise Exception("Not a valid method.")
-    x = x_init
+    x = initial_guess
     H = np.identity(len(x))
     for i in range(max_iter):
         x_vector = ad.create_vector('x', x)
