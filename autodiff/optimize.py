@@ -187,7 +187,8 @@ def newtons_method_gmres_action(f, initial_guess, max_iter=50, tol=1e-12):
             Returns J_f(x0)x
             """
         
-            f_x0 = f(ad.create_vector('x0', x0, seed_vector=x))
+            f_x0 = f(ad.create_vector('x0', x0, seed_vector=x));
+            f_x0 = np.array(f_x0) #ensure that f_x0 is np.array
             action = sum_values(ad.get_deriv(f_x0))
             return action
         
@@ -198,7 +199,7 @@ def newtons_method_gmres_action(f, initial_guess, max_iter=50, tol=1e-12):
     x0 = initial_guess
     for iter_num in range(max_iter):
         L = create_action(x0)
-        b = -f(x0)
+        b = -1 * np.array(f(x0))
         if len(x0) == 1:
             b = np.array([b])
         step, _ = gmres(L, b, tol = tol)
@@ -246,10 +247,10 @@ def newtons_method(f, initial_guess, max_iter = 1000, method = 'exact', tol =1e-
         return newtons_method_gmres_action(f, initial_guess, max_iter, tol)
     x0 = ad.create_vector('x0', initial_guess)
     for iter_num in range(max_iter):
-        fn = f(x0)
+        fn = np.array(f(x0)); #need convert the list/array that is passed back from function, so downstream autodiff functions for vectors work properly
         jacob = ad.get_jacobian(fn, ['x0{}'.format(i) for i in range(1, len(fn) + 1)])
         if method == 'inverse':
-            step = np.linalg.inv(-jacob).dot( ad.get_value(fn) )
+            step = np.linalg.inv(-jacob).dot(ad.get_value(fn))
         if method == 'exact':
             step = np.linalg.solve(-jacob, ad.get_value(fn))
         elif method == 'gmres':
