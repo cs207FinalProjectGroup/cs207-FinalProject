@@ -18,6 +18,20 @@ def test_create_vector():
     assert(np.array_equal(jacobian, np.array([[1, 0], [0, 1]])))
     jacobian = ad.get_jacobian(v, ['v1', 'v2', 'hello'])
     assert(np.array_equal(jacobian, np.array([[1, 0, 0], [0, 1, 0]])))
+
+    v = ad.create_vector('v', [1, 2], [3, 4])
+    assert(v[0].getValue() == 1)
+    assert(v[1].getValue() == 2)
+    derivs = ad.get_deriv(v) 
+    assert(np.array_equal(np.array([deriv.get('v1', 0) for deriv in derivs]), np.array([3, 0])))
+    assert(np.array_equal(np.array([deriv.get('v2', 0) for deriv in derivs]), np.array([0, 4])))
+    jacobian = ad.get_jacobian(v, ['v1', 'v2'])
+    assert(np.array_equal(jacobian, np.array([[3, 0], [0, 4]])))
+    jacobian = ad.get_jacobian(v, ['v1', 'v2', 'hello'])
+    assert(np.array_equal(jacobian, np.array([[3, 0, 0], [0, 4, 0]])))
+
+    with pytest.raises(Exception):    
+        v = ad.create_vector('v', [1, 2], [3, 4, 5])
     
     x = ad.Scalar('x', 1)
     y = ad.Scalar('y', 2)

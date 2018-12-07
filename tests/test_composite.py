@@ -9,6 +9,48 @@ import autodiff as ad
 def test_composite():
     #Test some more complicated functions / identities, including some multivariate ones.
 
+
+    x = ad.Scalar('x', 2)
+    z = (5 * (x + 20)  / 10) ** 2
+    d = z.getGradient(['x'])
+    assert(z.getValue() == 121)
+    assert(np.array_equal(d, [11]))
+
+    x = ad.Scalar('x', 2)
+    y = ad.Scalar('y', 3)
+    z = (x + 20) * y
+    d = z.getGradient(['x', 'y'])
+    assert(z.getValue() == 66)
+    assert(np.array_equal(d, [3, 22]))
+
+    x = ad.Scalar('x', 1)
+    y = ad.Scalar('y', 3)
+    z = (x * y + x) * y
+    d = z.getGradient(['x', 'y'])
+    assert(z.getValue() == 12)
+    assert(np.array_equal(d, [12, 7]))
+
+    x = ad.Scalar('x', 2)
+    y = ad.Scalar('y', 3)
+    z = (x + y) / y
+    d = z.getGradient(['x', 'y'])
+    assert(np.isclose(z.getValue(), 5/3))
+    assert(np.allclose(d, [1.0/3, -2.0/9]))
+
+    x = ad.Scalar('x', 2)
+    y = ad.Scalar('y', 3)
+    z = x + ((y ** 2) / y)
+    d = z.getGradient(['x', 'y'])
+    assert(z.getValue() == 5)
+    assert(np.array_equal(d, [1, 1]))
+
+    x = ad.Scalar('x', 2)
+    y = ad.Scalar('y', 3)
+    z = (x ** y) ** 2
+    d = z.getGradient(['x', 'y'])
+    assert(z.getValue() == 64)
+    assert(np.array_equal(d, [6 * 32, 2 * np.log(2) * 64]))        
+
     x = ad.Scalar('x', 16)
     y = ad.sin(ad.sqrt(x))
     assert(np.isclose(y.getValue(), np.sin(4)))

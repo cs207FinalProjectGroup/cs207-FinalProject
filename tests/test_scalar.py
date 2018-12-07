@@ -9,6 +9,16 @@ import autodiff as ad
 
 def test_add():
     
+    x = ad.Scalar('x', 10)
+    y = x + 2
+    assert(y.getValue() == 12)
+    assert(y.getDeriv()['x'] == 1.0)
+
+    x = ad.Scalar('x', 10, 212342)
+    y = x + 2
+    assert(y.getValue() == 12)
+    assert(y.getDeriv()['x'] == 212342.0)
+
     x,y = ad.Scalar('x', 2),ad.Scalar('y', 5)
     val = x+y
     assert(val.getValue() == 7.0)
@@ -36,6 +46,16 @@ def test_add():
     
 def test_mul():
 
+    x = ad.Scalar('x', 10)
+    y = x + 2
+    assert(y.getValue() == 12)
+    assert(y.getDeriv()['x'] == 1.0)
+
+    x = ad.Scalar('x', 10, 0.25)
+    y = 2 * x
+    assert(y.getValue() == 20)
+    assert(y.getDeriv()['x'] == 0.5)
+
     x = ad.Scalar('x', 5)
     val = 5 * x
     assert (val.getValue()==25.0)
@@ -46,6 +66,12 @@ def test_mul():
     assert (val.getValue()==30.0)
     assert(val.getDeriv()['x']==6.0)
     assert(val.getDeriv()['y']==5.0)
+
+    x,y = ad.Scalar('x', 5, 3), ad.Scalar('y', 6, 2)
+    val = x*y
+    assert (val.getValue()==30.0)
+    assert(val.getDeriv()['x']==18.0)
+    assert(val.getDeriv()['y']==10.0)    
 
     x,y = ad.Scalar('x', 5.0), ad.Scalar('y', 6.0)
     val = x*y
@@ -541,51 +567,3 @@ def test_equal():
     assert(not (x * x2 != x2 * x))
 
 
-
-def test_composite():
-    #Test assortment of composite operations.
-    x = ad.Scalar('x', 2)
-    z = (5 * (x + 20)  / 10) ** 2
-    d = z.getGradient(['x'])
-    assert(z.getValue() == 121)
-    assert(np.array_equal(d, [11]))
-
-    x = ad.Scalar('x', 2)
-    y = ad.Scalar('y', 3)
-    z = (x + 20) * y
-    d = z.getGradient(['x', 'y'])
-    assert(z.getValue() == 66)
-    assert(np.array_equal(d, [3, 22]))
-
-    x = ad.Scalar('x', 1)
-    y = ad.Scalar('y', 3)
-    z = (x * y + x) * y
-    d = z.getGradient(['x', 'y'])
-    assert(z.getValue() == 12)
-    assert(np.array_equal(d, [12, 7]))
-
-    x = ad.Scalar('x', 2)
-    y = ad.Scalar('y', 3)
-    z = (x + y) / y
-    d = z.getGradient(['x', 'y'])
-    assert(np.isclose(z.getValue(), 5/3))
-    assert(np.allclose(d, [1.0/3, -2.0/9]))
-
-    x = ad.Scalar('x', 2)
-    y = ad.Scalar('y', 3)
-    z = x + ((y ** 2) / y)
-    d = z.getGradient(['x', 'y'])
-    assert(z.getValue() == 5)
-    assert(np.array_equal(d, [1, 1]))
-
-    x = ad.Scalar('x', 2)
-    y = ad.Scalar('y', 3)
-    z = (x ** y) ** 2
-    d = z.getGradient(['x', 'y'])
-    assert(z.getValue() == 64)
-    assert(np.array_equal(d, [6 * 32, 2 * np.log(2) * 64]))        
-
-
-
-    
-    
