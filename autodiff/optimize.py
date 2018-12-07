@@ -173,7 +173,7 @@ def newtons_method_gmres_action(f, initial_guess, max_iter=50, tol=1e-12):
 
 
     
-    output_dim = len(initial_guess)
+    output_dim = len(f(initial_guess))
     
     @np.vectorize
     def sum_values(dictionary):
@@ -187,7 +187,7 @@ def newtons_method_gmres_action(f, initial_guess, max_iter=50, tol=1e-12):
             Returns J_f(x0)x
             """
         
-            f_x0 = f(*ad.create_vector('x0', x0, seed_vector=x))
+            f_x0 = f(ad.create_vector('x0', x0, seed_vector=x))
             action = sum_values(ad.get_deriv(f_x0))
             return action
         
@@ -198,10 +198,10 @@ def newtons_method_gmres_action(f, initial_guess, max_iter=50, tol=1e-12):
     x0 = initial_guess
     for iter_num in range(max_iter):
         L = create_action(x0)
-        b = -f(*x0)
+        b = -f(x0)
         if len(x0) == 1:
             b = np.array([b])
-        step, _ = gmres(L,b, tol = tol)
+        step, _ = gmres(L, b, tol = tol)
         xnext = x0 + step 
         if np.all(np.abs(xnext - x0) < tol):
             break;
@@ -240,6 +240,8 @@ def newtons_method(f, initial_guess, max_iter = 1000, method = 'exact', tol =1e-
 
     if method not in ['inverse', 'exact', 'gmres', 'gmres_action']:
         raise Exception("Not a valid method.")
+    if len(f(initial_guess)) != len(initial_guess):
+        raise Exception('Output dimension of f should be the same as the input dimension of f.')
     if method == 'gmres_action':
         return newtons_method_gmres_action(f, initial_guess, max_iter, tol)
     x0 = ad.create_vector('x0', initial_guess)
@@ -247,7 +249,7 @@ def newtons_method(f, initial_guess, max_iter = 1000, method = 'exact', tol =1e-
         fn = f(x0)
         jacob = ad.get_jacobian(fn, ['x0{}'.format(i) for i in range(1, len(fn) + 1)])
         if method == 'inverse':
-            step = np.linalg.inv(-jacob) @ ad.get_value(fn)
+            step = np.linalg.inv(-jacob).dot( ad.get_value(fn) )
         if method == 'exact':
             step = np.linalg.solve(-jacob, ad.get_value(fn))
         elif method == 'gmres':
