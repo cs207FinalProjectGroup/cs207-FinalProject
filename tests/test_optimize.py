@@ -101,3 +101,21 @@ def test_find_minimum():
     assert (np.isclose(optimize.newtons_method(test_func5, [5, 4, 5], method="gmres_action", max_iter=1000)[0],
                        [-0.5, 2.1038034, 0.33333333]))[0]
 
+    def test_func6(x):
+        x1 = x[0]
+        return np.array([(x1 ** 2) + 3])
+
+    with pytest.raises(RuntimeError):
+        optimize.newtons_method(test_func6, [5], method="gmres", max_iter= 1000)
+
+    with pytest.raises(RuntimeError):
+        optimize.newtons_method(test_func6, [5], method="gmres_action", max_iter=1000)
+
+    with pytest.raises(Exception):
+        optimize.newtons_method(test_func6, [5,5,5], method="gmres", max_iter= 1000)
+
+    with pytest.raises(Exception):
+        optimize.newtons_method(test_func6, [5,5,5], method="gkkk", max_iter= 1000)
+
+    with pytest.raises(Exception):
+        optimize.quasi_newtons_method(rosenbrock, [2, 3], method='gfdgh')
