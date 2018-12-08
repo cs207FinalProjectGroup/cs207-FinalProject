@@ -255,11 +255,17 @@ def newtons_method(f, initial_guess, max_iter = 1000, method = 'exact', tol =1e-
         elif method == 'gmres':
             step, _ = gmres(jacob, -ad.get_value(fn), tol = tol)
         xnext = x0 + step
+        
+        #check if we have converged
         if np.all(np.abs(ad.get_value(xnext) - ad.get_value(x0)) < tol):
-            break;
+            return (ad.get_value(xnext), iter_num + 1);
+        
+        #update x0 because we have not converged yet
         x0 = xnext
+        
+    raise RuntimeError("Failed to converge after {0} iterations, value is {1}".format(max_iter, ad.get_value(x0)) );
 
-    return (ad.get_value(x0), iter_num + 1)
+    
     
 
 
