@@ -8,8 +8,8 @@ import autodiff.optimize as optimize
 
 
 def test_find_minimum():
-    def test_func(x, y):
-        return 2 * (x ** 2) + 3 * (y ** 2)
+    def test_func(args):
+        return 2 * (args[0] ** 2) + 3 * (args[1] ** 2)
 
     assert(np.isclose(optimize.gradient_descent(test_func, [2, 100])[0], [0, 0]).all())
     assert(np.isclose(optimize.quasi_newtons_method(test_func, [2, 100], method = 'BFGS')[0], [0, 0]).all())
@@ -33,8 +33,8 @@ def test_find_minimum():
     assert(np.isclose(optimize.quasi_newtons_method(test_func, [0.4242, -0.54234], method = 'Broyden')[0], [0, 0]).all())
 
 
-    def test_func2(x):
-        return (x - 5) ** 2
+    def test_func2(args):
+        return (args[0] - 5) ** 2
 
     assert(np.isclose(optimize.gradient_descent(test_func2, [1])[0], [5]).all())
     assert(np.isclose(optimize.quasi_newtons_method(test_func2, [1], method = 'BFGS')[0], [5]).all())
@@ -52,8 +52,8 @@ def test_find_minimum():
     assert(np.isclose(optimize.quasi_newtons_method(test_func2, [20], method = 'Broyden')[0], [5]).all())
 
 
-    def rosenbrock(x, y, a = 2, b = 3):
-        return (a - x) ** 2 + b * (y - x ** 2) ** 2
+    def rosenbrock(args, a = 2, b = 3):
+        return (a - args[0]) ** 2 + b * (args[1] - args[0] ** 2) ** 2
 
     assert(np.isclose(optimize.gradient_descent(rosenbrock, [1, 1])[0], [2, 4]).all())
     assert(np.isclose(optimize.quasi_newtons_method(rosenbrock, [1, 1], method = 'BFGS')[0], [2, 4]).all())
