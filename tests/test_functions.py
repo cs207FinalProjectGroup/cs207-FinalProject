@@ -102,7 +102,7 @@ def test_exp():
     assert(np.isclose(y.getDeriv()['x'], -2.3 * np.exp(-3)))
 
     assert (ad.exp(0) == 1)
-    assert (ad.exp(13443) == np.exp(13443))
+    assert np.isclose(ad.exp(4), np.exp(4))
 
     x = ad.Scalar('x', -3)
     y = ad.Scalar('y', 5)
