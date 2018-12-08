@@ -146,12 +146,12 @@ def quasi_newtons_method(f, initial_guess, max_iter = 10000, method = 'BFGS', to
 
 def _newtons_method_gmres_action(f, initial_guess, max_iter=50, tol=1e-12):
     """
-    Implements Newton's method for rootfinding, solvinfg for the step size using gmres action.
+    Helper function to solve for the step size using a Linear Operator that is passed to gmres for Newton's method.
     
     INPUTS
     ======= 
-    fn: Function 
-    The function that we are trying to find the minimum of. The function must take in the same number of arguments as len(initial_guess)
+    f: Function 
+    The function that we are trying to find a root of. The function must take in single list/array that has the same dimension as len(initial_guess).
     
     initial_guess: List or array of ints/floats
     The initial position 
@@ -166,7 +166,13 @@ def _newtons_method_gmres_action(f, initial_guess, max_iter=50, tol=1e-12):
     RETURNS
     ========
     Tuple
-    A tuple with first entry which maps to the position of the minimum and second entry which maps to the number of iterations it took for the algorithm to stop
+    A tuple with first entry that maps to the position of the minimum and second entry, which is the number of iterations it took for the algorithm to stop.
+    
+    NOTES
+    =====
+    POST:
+        - Returns a tuple. The first entry maps to the position of the minimum, and the second entry is the number of iterations it took for the algorithm to stop.
+        - If the convergence is not reached by 'max_iter', then a RuntimeError is thrown to alert the user.
     """
 
 
@@ -215,7 +221,7 @@ def newtons_method(f, initial_guess, max_iter = 1000, method = 'exact', tol =1e-
     
     INPUTS
     ======= 
-    fn: Function 
+    f: Function 
     The function that we are trying to find a root of. The function must take in single list/array that has the same dimension as len(initial_guess).
     
     initial_guess: List or array of ints/floats
@@ -238,7 +244,7 @@ def newtons_method(f, initial_guess, max_iter = 1000, method = 'exact', tol =1e-
     RETURNS
     ========
     Tuple
-    A tuple with first entry which maps to the position of the minimum and second entry which maps to the number of iterations it took for the algorithm to stop
+    A tuple with first entry which maps to the position of the minimum and second entry which maps to the number of iterations it took for the algorithm to stop.
     
     NOTES
     =====
