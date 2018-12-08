@@ -288,9 +288,11 @@ def sqrt(sclr):
 def arcsin(sclr):
     """
     This function takes in an int, float, or Scalar object and applies the arcsine function to the value. If the argument is an int or float, then the function returns a float. If the argument is a Scalar object, the function returns a new Scalar object with the updated value and derivative.
+    
     INPUTS
     =======
     sclr: An int, float, or Scalar object on which the arcsine function will applied.
+    
     RETURNS
     ========
     float, Scalar
@@ -318,9 +320,11 @@ def arcsin(sclr):
 def arccos(sclr):
     """
     This function takes in an int, float, or Scalar object and applies the arccosine function to the value. If the argument is an int or float, then the function returns a float. If the argument is a Scalar object, the function returns a new Scalar object with the updated value and derivative.
+    
     INPUTS
     =======
     sclr: An int, float, or Scalar object on which the arccosine function will applied.
+    
     RETURNS
     ========
     float, Scalar
@@ -348,9 +352,11 @@ def arccos(sclr):
 def arctan(sclr):
     """
     This function takes in an int, float, or Scalar object and applies the arctangent function to the value. If the argument is an int or float, then the function returns a float. If the argument is a Scalar object, the function returns a new Scalar object with the updated value and derivative.
+    
     INPUTS
     =======
     sclr: An int, float, or Scalar object on which the arctangent function will applied.
+    
     RETURNS
     ========
     float, Scalar
@@ -373,17 +379,21 @@ def arctan(sclr):
     except AttributeError:  # dealing with an int/float
         return np.arctan(sclr);    
 
+
 @vectorize
 def sinh(sclr):
     """
     This function takes in an int, float, or Scalar object and applies the hyperbolic sine function to the value. If the argument is an int or float, then the function returns a float. If the argument is a Scalar object, the function returns a new Scalar object with the updated value and derivative.
+    
     INPUTS
     =======
     sclr: An int, float, or Scalar object on which the hyperbolic sine function will applied.
+    
     RETURNS
     ========
     float, Scalar
     A float is returned if the input is an int/float. A new Scalar object, resulting from applying the hyperbolic sine function to  'sclr', is returned if the input is a Scalar object .
+    
     NOTES
     =====
     POST:
@@ -406,13 +416,17 @@ def sinh(sclr):
 def cosh(sclr):
     """
     This function takes in an int, float, or Scalar object and applies the hyperbolic cosine function to the value. If the argument is an int or float, then the function returns a float. If the argument is a Scalar object, the function returns a new Scalar object with the updated value and derivative.
+    
     INPUTS
     =======
     sclr: An int, float, or Scalar object on which the hyperbolic cosine function will applied.
+    
     RETURNS
     ========
     float, Scalar
+    
     A float is returned if the input is an int/float. A new Scalar object, resulting from applying the hyperbolic cosine function to  'sclr', is returned if the input is a Scalar object .
+    
     NOTES
     =====
     POST:
@@ -430,17 +444,21 @@ def cosh(sclr):
     except AttributeError:  # dealing with an int/float
         return np.cosh(sclr);
 
+
 @vectorize
 def tanh(sclr):
     """
     This function takes in an int, float, or Scalar object and applies the hyperbolic tangent function to the value. If the argument is an int or float, then the function returns a float. If the argument is a Scalar object, the function returns a new Scalar object with the updated value and derivative.
+
     INPUTS
     =======
     sclr: An int, float, or Scalar object on which the hyperbolic tangent function will applied.
+
     RETURNS
     ========
     float, Scalar
     A float is returned if the input is an int/float. A new Scalar object, resulting from applying the hyperbolic tangent function to  'sclr', is returned if the input is a Scalar object .
+
     NOTES
     =====
     POST:
@@ -454,13 +472,16 @@ def tanh(sclr):
 def logistic(sclr):
     """
     This function takes in an int, float, or Scalar object and applies the logistic function to the value. If the argument is an int or float, then the function returns a float. If the argument is a Scalar object, the function returns a new Scalar object with the updated value and derivative.
+
     INPUTS
     =======
     sclr: An int, float, or Scalar object on which the the logistic function will be applied.
+
     RETURNS
     ========
     float, Scalar
     A float is returned if the input is an int/float. A new Scalar object, resulting from applying the logistic function to 'sclr', is returned if the input is a Scalar object .
+
     NOTES
     =====
     POST:
@@ -475,14 +496,17 @@ def logistic(sclr):
 def log(sclr, base):
     """
     This function takes in an int, float, or Scalar object and applies the log with base to the value. If the argument is an int or float, then the function returns a float. If the argument is a Scalar object, the function returns a new Scalar object with the updated value and derivative.
+
     INPUTS
     =======
     sclr: An int, float, or Scalar object on which the log with base function will applied.
     base: An int or float representing the base
+
     RETURNS
     ========
     float, Scalar
     A float is returned if the input is an int/float. A new Scalar object, resulting from applying the log with base function to 'sclr', is returned if the input is a Scalar object .
+
     NOTES
     =====
     POST:
@@ -505,13 +529,16 @@ def log(sclr, base):
 def ln(sclr):
     """
     This function takes in an int, float, or Scalar object and applies the natural log to the value. If the argument is an int or float, then the function returns a float. If the argument is a Scalar object, the function returns a new Scalar object with the updated value and derivative.
+
     INPUTS
     =======
     sclr: An int, float, or Scalar object on which the natural log function will applied.
+
     RETURNS
     ========
     float, Scalar
     A float is returned if the input is an int/float. A new Scalar object, resulting from applying the natural log function to 'sclr', is returned if the input is a Scalar object .
+
     NOTES
     =====
     POST:
