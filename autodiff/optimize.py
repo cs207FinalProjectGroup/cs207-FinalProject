@@ -84,14 +84,14 @@ def line_search(f, x, p, tau = 0.1, c = 0.1, alpha = 1):
 
 def quasi_newtons_method(f, initial_guess, max_iter = 10000, method = 'BFGS', tol = 1e-12):
     """
-    Implements Quasi-Newton method with different update methods of the estimate of the inverse of the Hessian.
+    Implements Quasi-Newton methods with different methods to estimate the inverse of the Hessian.
     Utilizes backtracking line search to determine step size.     
     https://en.wikipedia.org/wiki/Quasi-Newton_method
 
     INPUTS
     ======= 
-    fn: Function 
-    The function that we are trying to find the minimum of. The function must take in the same number of arguments as len(initial_guess)
+    f: Function 
+    The function that we are trying to find the minimum of. The function must take in the same number of arguments as len(initial_guess).
     
     initial_guess: List or array of ints/floats
     The initial position 
@@ -100,8 +100,8 @@ def quasi_newtons_method(f, initial_guess, max_iter = 10000, method = 'BFGS', to
     The max number of iterations
     
     method: String
-    The update method to update the estimate of the inverse of the Hessian
-    Currently BFGS, DFP, Broyden, and SR1 are implemented
+    The update method to update the estimate of the inverse of the Hessian.
+    Currently, BFGS, DFP, and Broyden are implemented.
     
     tol: float
     The tolerance. If the norm of the gradient is less than the tolerance, the algorithm will stop
@@ -112,7 +112,7 @@ def quasi_newtons_method(f, initial_guess, max_iter = 10000, method = 'BFGS', to
     A tuple with first entry which maps to the position of the minimum and second entry which maps to the number of iterations it took for the algorithm to stop
     """
     
-    if method not in ['BFGS', 'DFP', 'Broyden', 'SR1']:
+    if method not in ['BFGS', 'DFP', 'Broyden']:
             raise Exception("Not a valid method.")
     x = initial_guess
     H = np.identity(len(x))
