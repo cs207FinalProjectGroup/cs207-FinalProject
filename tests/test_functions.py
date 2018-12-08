@@ -280,6 +280,14 @@ def test_arcsin():
     y = ad.arcsin(-0.1);
     assert(np.isclose(y, np.arcsin(-0.1)) );
 
+    #test function with two variables
+    x = ad.Scalar('x', 0.5);
+    y = ad.Scalar('y', -0.2);
+    z = ad.arcsin(x * y);
+    assert( np.isclose(z.getValue(), np.arcsin(0.5 * -0.2)) );
+    assert( np.isclose(z.getDeriv()['x'], -0.2 * 1 / np.sqrt(1 - (-0.1)**2)) );
+    assert( np.isclose(z.getDeriv()['y'], 0.5 * 1 / np.sqrt(1 - (-0.1)**2)) );
+    
 
 def test_arccos():
     x = ad.Scalar('x', 0.5);
@@ -290,6 +298,14 @@ def test_arccos():
     y = ad.arccos(-0.1);
     assert(np.isclose(y, np.arccos(-0.1)));
     
+    #test function with two variables
+    x = ad.Scalar('x', 0.5);
+    y = ad.Scalar('y', -0.2);
+    z = ad.arccos(x * y);
+    assert( np.isclose(z.getValue(), np.arccos(0.5 * -0.2)) );
+    assert( np.isclose(z.getDeriv()['x'], -0.2 * -1 / np.sqrt(1 - (-0.1)**2)) );
+    assert( np.isclose(z.getDeriv()['y'], 0.5 * -1 / np.sqrt(1 - (-0.1)**2)) );
+    
 
 def test_arctan():
     x = ad.Scalar('x', 0.5);
@@ -299,3 +315,11 @@ def test_arctan():
     
     y = ad.arctan(-0.1);
     assert(np.isclose(y, np.arctan(-0.1)));
+    
+    #test function with two variables
+    x = ad.Scalar('x', 0.5);
+    y = ad.Scalar('y', -0.2);
+    z = ad.arctan(x * y);
+    assert( np.isclose(z.getValue(), np.arctan(0.5 * -0.2)) );
+    assert( np.isclose(z.getDeriv()['x'], -0.2 * 1 / (1 + (-0.1)**2)) );
+    assert( np.isclose(z.getDeriv()['y'], 0.5 * 1 / (1 + (-0.1)**2)) );
