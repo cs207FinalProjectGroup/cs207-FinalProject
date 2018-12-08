@@ -9,11 +9,11 @@ def gradient_descent(f, intial_guess, step_size = 0.01, max_iter = 10000, tol = 
 
     INPUTS
     ======= 
-    f: Function 
-    The function that we are trying to find the minimum of. The function must take in the same number of arguments as len(initial_guess)
+    f: function 
+    The function that we are trying to find the minimum of. The function must take in single list/array that has the same dimension as len(initial_guess).
     
     initial_guess: List or array of ints/floats
-    The initial position 
+    The initial position to begin the search for the minimum of the function 'f'.
 
     step_size: float
     The step size. In this case the step size will be constant
@@ -33,7 +33,7 @@ def gradient_descent(f, intial_guess, step_size = 0.01, max_iter = 10000, tol = 
     x = np.array(intial_guess)
     for i in range(max_iter):
         x_vector = ad.create_vector('x', x)
-        fn_at_x = f(*x_vector)
+        fn_at_x = f(x_vector)
         gradient = fn_at_x.getGradient(['x{}'.format(i) for i in range(1, len(x) + 1)])
         if np.sqrt(np.abs(gradient).sum()) < tol:
             break
@@ -47,7 +47,7 @@ def line_search(f, x, p, tau = 0.1, c = 0.1, alpha = 1):
     INPUTS
     ======= 
     fn: Function 
-    The function that we are trying to find the minimum of. The function must take in the same number of arguments as len(initial_guess)
+    The function that we are trying to find the minimum of. The function must take in the same number of arguments as len(x)
     
     x: List or array of ints/floats
     The initial position 
@@ -71,14 +71,14 @@ def line_search(f, x, p, tau = 0.1, c = 0.1, alpha = 1):
     """
 
     x = ad.create_vector('x', x)
-    fn_val1 = f(*x)
-    fn_val2 = f(*(x + alpha * p))
+    fn_val1 = f(x)
+    fn_val2 = f(x + alpha * p)
     gradient = fn_val1.getGradient(['x{}'.format(i) for i in range(1, len(x) + 1)])
     m = (p * gradient).sum()
     t = -c * m
     while ad.get_value(fn_val1 - fn_val2) < alpha * t:
         alpha = tau * alpha 
-        fn_val2 = f(*(x + alpha * p))      
+        fn_val2 = f(x + alpha * p)
     return alpha
         
 
@@ -90,11 +90,11 @@ def quasi_newtons_method(f, initial_guess, max_iter = 10000, method = 'BFGS', to
 
     INPUTS
     ======= 
-    f: Function 
-    The function that we are trying to find the minimum of. The function must take in the same number of arguments as len(initial_guess).
+    f: function 
+    The function that we are trying to find the minimum of. The function must take in single list/array that has the same dimension as len(initial_guess).
     
     initial_guess: List or array of ints/floats
-    The initial position 
+    The initial position to begin the search for the minimum of the function 'f'.
     
     max_iter: int
     The max number of iterations
@@ -118,7 +118,7 @@ def quasi_newtons_method(f, initial_guess, max_iter = 10000, method = 'BFGS', to
     H = np.identity(len(x))
     for i in range(max_iter):
         x_vector = ad.create_vector('x', x)
-        fn_at_x = f(*x_vector)
+        fn_at_x = f(x_vector)
         gradient = fn_at_x.getGradient(['x{}'.format(i) for i in range(1, len(x) + 1)])
 
         p = -H @ gradient
@@ -128,7 +128,7 @@ def quasi_newtons_method(f, initial_guess, max_iter = 10000, method = 'BFGS', to
 
         x = x + delta_x
         x_vector2 = ad.create_vector('x', x)
-        fn_at_x2 = f(*x_vector2)
+        fn_at_x2 = f(x_vector2)
         gradient2 = fn_at_x2.getGradient(['x{}'.format(i) for i in range(1, len(x) + 1)])
         if np.sqrt(np.abs(gradient2).sum()) < tol:
             break
@@ -204,7 +204,7 @@ def _newtons_method_gmres_action(f, initial_guess, max_iter=50, tol=1e-12):
         b = -1 * np.array(f(x0))
         if len(x0) == 1:
             b = np.array([b])
-        step, _ = gmres(L, b, tol = tol)
+        step, _ = gmres(L, b, tol = tol, atol = 'legacy')
         xnext = x0 + step 
         if np.all(np.abs(xnext - x0) < tol):
             return (xnext, iter_num + 1);
@@ -266,7 +266,7 @@ def newtons_method(f, initial_guess, max_iter = 1000, method = 'exact', tol =1e-
         if method == 'exact':
             step = np.linalg.solve(-jacob, ad.get_value(fn))
         elif method == 'gmres':
-            step, _ = gmres(jacob, -ad.get_value(fn), tol = tol)
+            step, _ = gmres(jacob, -ad.get_value(fn), tol = tol, atol = 'legacy')
         xnext = x0 + step
         
         #check if we have converged
