@@ -67,4 +67,37 @@ def test_find_minimum():
     assert(np.isclose(optimize.quasi_newtons_method(rosenbrock, [2, 3], method = 'Broyden')[0], [2, 4]).all())
 
 
+    def test_func3(x):
+        x = x[0]
+        return np.array([x**3 -1])
+
+    assert (np.isclose(optimize.newtons_method(test_func3,[5], method="inverse", max_iter= 1000)[0][0], 1.0))
+    assert (np.isclose(optimize.newtons_method(test_func3,[5], method="exact", max_iter= 1000)[0][0], 1.0))
+    assert (np.isclose(optimize.newtons_method(test_func3,[5], method="gmres", max_iter= 1000)[0][0], 1.0))
+    assert (np.isclose(optimize.newtons_method(test_func3,[5], method="gmres_action", max_iter= 1000)[0][0], 1.0))
+
+    def test_func4(x):
+        x1 = x[0]
+        x2 = x[1]
+        return np.array([ 4 + 8*(x1**2) - (x1**4), 4 + 8*(x2**2) - (x2**4)])
+
+    assert (np.isclose(optimize.newtons_method(test_func4, [-3,3], method="inverse", max_iter= 1000)[0] , [-2.91069338,  2.91069338]))[0]
+    assert (np.isclose(optimize.newtons_method(test_func4, [-3,3], method="exact", max_iter= 1000)[0] , [-2.91069338,  2.91069338]))[0]
+    assert (np.isclose(optimize.newtons_method(test_func4, [-3,3], method="gmres", max_iter= 1000)[0] , [-2.91069338,  2.91069338]))[0]
+    assert (np.isclose(optimize.newtons_method(test_func4, [-3,3], method="gmres_action", max_iter= 1000)[0] , [-2.91069338,  2.91069338]))[0]
+
+    def test_func5(x):
+        x1 = x[0]
+        x2 = x[1]
+        x3 = x[2]
+        return np.array([x1 + x1 + 1, x2 ** 3 - 3 * x2 - 3, -3 * x3 + 1])
+
+    assert (np.isclose(optimize.newtons_method(test_func5, [5, 4, 5], method="inverse", max_iter=1000)[0],
+                       [-0.5, 2.1038034, 0.33333333]))[0]
+    assert (np.isclose(optimize.newtons_method(test_func5, [5, 4, 5], method="exact", max_iter=1000)[0],
+                       [-0.5, 2.1038034, 0.33333333]))[0]
+    assert (np.isclose(optimize.newtons_method(test_func5, [5, 4, 5], method="gmres", max_iter=1000)[0],
+                       [-0.5, 2.1038034, 0.33333333]))[0]
+    assert (np.isclose(optimize.newtons_method(test_func5, [5, 4, 5], method="gmres_action", max_iter=1000)[0],
+                       [-0.5, 2.1038034, 0.33333333]))[0]
 

@@ -214,7 +214,7 @@ def newtons_method(f, initial_guess, max_iter = 1000, method = 'exact', tol =1e-
     """
     Implements Newton's method for rootfinding with different methods to find the step at each iteration
     
-    INPUTS
+    IN====PUTS
     ======= 
     fn: Function 
     The function that we are trying to find a root of. The function must take in the same number of arguments as len(initial_guess)
