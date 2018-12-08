@@ -146,7 +146,7 @@ def quasi_newtons_method(f, initial_guess, max_iter = 10000, method = 'BFGS', to
 
 def _newtons_method_gmres_action(f, initial_guess, max_iter=50, tol=1e-12):
     """
-    Helper function to solve for the step size using a Linear Operator that is passed to gmres for Newton's method.
+    Helper function to solve for the step size using a Linear Operator that is passed to scipy.sparse.linalg.gmres for Newton's method.
     
     INPUTS
     ======= 
@@ -175,8 +175,6 @@ def _newtons_method_gmres_action(f, initial_guess, max_iter=50, tol=1e-12):
         - If the convergence is not reached by 'max_iter', then a RuntimeError is thrown to alert the user.
     """
 
-
-    
     output_dim = len(f(initial_guess))
     
     @np.vectorize
@@ -188,7 +186,7 @@ def _newtons_method_gmres_action(f, initial_guess, max_iter=50, tol=1e-12):
         def L_fun(x):
             """
             Action
-            Returns J_f(x0)x
+            Returns J_f(x0)*x by setting the values of 'x' as the initial derivatives for the variables in x0.
             """
         
             f_x0 = f(ad.create_vector('x0', x0, seed_vector=x));
@@ -235,7 +233,7 @@ def newtons_method(f, initial_guess, max_iter = 1000, method = 'exact', tol =1e-
     Options:
         'inverse' : calculate (A^-1)*b = x
         'exact' : Use np.linalg.solve(A, b)
-        'gmres" : Use np.linalg.gmres(A, b), which finds a solution iteratively
+        'gmres" : Use scipy.sparse.linalg.gmres(A, b), which finds a solution iteratively
         'gmres_action' :  Use np.linalg.gmres(L, b), where 'L' is a linear operator used to efficiently calculate A*x. Works well for functions with sparse Jacobian matrices.
     
     tol: float
