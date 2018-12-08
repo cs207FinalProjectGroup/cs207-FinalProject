@@ -83,7 +83,7 @@ def line_search(f, x, p, tau = 0.1, c = 0.1, alpha = 1):
         
 
 def quasi_newtons_method(f, initial_guess, max_iter = 10000, method = 'BFGS', tol = 1e-12):
-    """p
+    """
     Implements Quasi-Newton method with different update methods of the estimate of the inverse of the Hessian.
     Utilizes backtracking line search to determine step size.     
     https://en.wikipedia.org/wiki/Quasi-Newton_method
@@ -213,7 +213,7 @@ def newtons_method(f, initial_guess, max_iter = 1000, method = 'exact', tol =1e-
     """
     Implements Newton's method for rootfinding with different methods to find the step at each iteration
     
-    IN====PUTS
+    INPUTS
     ======= 
     fn: Function 
     The function that we are trying to find a root of. The function must take in the same number of arguments as len(initial_guess)
