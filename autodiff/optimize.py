@@ -144,7 +144,7 @@ def quasi_newtons_method(f, initial_guess, max_iter = 10000, method = 'BFGS', to
 
     return (x, i + 1)
 
-def newtons_method_gmres_action(f, initial_guess, max_iter=50, tol=1e-12):
+def _newtons_method_gmres_action(f, initial_guess, max_iter=50, tol=1e-12):
     """
     Implements Newton's method for rootfinding, solvinfg for the step size using gmres action.
     
@@ -211,22 +211,26 @@ def newtons_method_gmres_action(f, initial_guess, max_iter=50, tol=1e-12):
 
 def newtons_method(f, initial_guess, max_iter = 1000, method = 'exact', tol =1e-12):
     """
-    Implements Newton's method for rootfinding with different methods to find the step at each iteration
+    Implements Newton's method for root-finding with different methods to find the step at each iteration
     
     INPUTS
     ======= 
     fn: Function 
-    The function that we are trying to find a root of. The function must take in the same number of arguments as len(initial_guess)
+    The function that we are trying to find a root of. The function must take in single list/array that has the same dimension as len(initial_guess).
     
     initial_guess: List or array of ints/floats
-    The initial position 
+    The initial position to begin the search for the roots of the function 'f'.
     
     max_iter: int
     The max number of iterations
     
     method: String
-    The update method to find the step at each iteration
-    Currently inverse, exact, gmres, and gmres_action are implemented
+    The method to solve Ax=b to find the step 'x' at each iteration.
+    Options:
+        'inverse' : calculate (A^-1)*b = x
+        'exact' : Use np.linalg.solve(A, b)
+        'gmres" : Use np.linalg.gmres(A, b), which finds a solution iteratively
+        'gmres_action' :  Use np.linalg.gmres(L, b), where 'L' is a linear operator used to efficiently calculate A*x. Works well for functions with sparse Jacobian matrices.
     
     tol: float
     The tolerance. If the abs value of the steps for one iteration are less than the tol, then the algorithm stops
@@ -235,6 +239,12 @@ def newtons_method(f, initial_guess, max_iter = 1000, method = 'exact', tol =1e-
     ========
     Tuple
     A tuple with first entry which maps to the position of the minimum and second entry which maps to the number of iterations it took for the algorithm to stop
+    
+    NOTES
+    =====
+    POST:
+        - Returns a tuple. The first entry maps to the position of the minimum, and the second entry is the number of iterations it took for the algorithm to stop.
+        - If the convergence is not reached by 'max_iter', then a RuntimeError is thrown to alert the user.
     """
 
     if method not in ['inverse', 'exact', 'gmres', 'gmres_action']:
@@ -242,7 +252,7 @@ def newtons_method(f, initial_guess, max_iter = 1000, method = 'exact', tol =1e-
     if len(f(initial_guess)) != len(initial_guess):
         raise Exception('Output dimension of f should be the same as the input dimension of f.')
     if method == 'gmres_action':
-        return newtons_method_gmres_action(f, initial_guess, max_iter, tol)
+        return _newtons_method_gmres_action(f, initial_guess, max_iter, tol)
     x0 = ad.create_vector('x0', initial_guess)
     for iter_num in range(max_iter):
         fn = np.array(f(x0)); #need convert the list/array that is passed back from function, so downstream autodiff functions for vectors work properly
