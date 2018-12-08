@@ -4,3 +4,6 @@ __pycache__/
 *.pyc
 .coverage
 .pytest_cache/
+autodiff.egg-info/
+autodiff_py.egg-info/
+dist/
