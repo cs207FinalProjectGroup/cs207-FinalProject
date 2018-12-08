@@ -141,8 +141,7 @@ def quasi_newtons_method(f, initial_guess, max_iter = 10000, method = 'BFGS', to
             H = H + (delta_x @ delta_x.T) / (delta_x.T @ y) - (H @ y @ y.T @ H) / (y.T @ H @ y)
         elif method == 'Broyden':
             H = H + ((delta_x - H @ y) @ delta_x.T @ H) / (delta_x.T @ H @ y)
-        elif method == 'SR1':
-            H = H + ((delta_x - H @ y) @ (delta_x - H @ y).T) / ((delta_x - H @ y).T @ y)
+
     return (x, i + 1)
 
 def newtons_method_gmres_action(f, initial_guess, max_iter=50, tol=1e-12):
